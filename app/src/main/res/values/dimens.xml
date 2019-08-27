@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_vertical">10dp</dimen>
+    <dimen name="margin_Horizontal">5dp</dimen>
+
+    <!-- SuperButton -->
+    <dimen name="SuperButton_CornerRadius">25dp</dimen>
+    <dimen name="SuperButton_Width">300dp</dimen>
+
+    <!-- Toolbar -->
+    <dimen name="Toolbar_Height">80dp</dimen>
+
+    <!-- EditText -->
+    <dimen name="EditText_Width">300dp</dimen>
+    <dimen name="EditText_Height">60dp</dimen>
+    <dimen name="EditText_TextSize">18sp</dimen>
+
+    <!-- TextView -->
+    <dimen name="TextView_Width">300dp</dimen>
+    <dimen name="TextView_Size">18sp</dimen>
+
+</resources>

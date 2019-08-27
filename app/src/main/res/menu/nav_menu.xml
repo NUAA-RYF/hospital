@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_personal"
+            android:icon="@mipmap/icon_nav_personal"
+            android:title="@string/nav_personal"/>
+        <item
+            android:id="@+id/nav_weight"
+            android:icon="@mipmap/icon_nav_weight"
+            android:title="@string/nav_weight"/>
+        <item
+            android:id="@+id/nav_child"
+            android:icon="@mipmap/icon_nav_child"
+            android:title="@string/nav_child"/>
+    </group>
+</menu>

@@ -1,0 +1,23 @@
+<resources>
+
+    <!-- 应用程序主题 -->
+    <style name="AppTheme" parent="XUITheme.Phone">
+        <!-- 自定义自己的主题样式 -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- 状态栏透明 -->
+    <style name="SFActivityTheme" parent="AppTheme">
+    </style>
+
+    <!-- 主题标题栏 -->
+    <style name="MainToolBar" parent="XUITheme.Phone">
+        <item name="colorPrimary">@color/xui_config_color_red</item>
+        <item name="colorPrimaryDark">@color/xui_config_color_red</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+</resources>

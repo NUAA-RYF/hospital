@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="Hospital"/>
+
+    <version value="5"/>
+
+    <list>
+        <mapping class="com.thundersoft.hospital.model.Constellation"/>
+        <mapping class="com.thundersoft.hospital.model.Solarterm"/>
+        <mapping class="com.thundersoft.hospital.model.JieQi"/>
+    </list>
+</litepal>

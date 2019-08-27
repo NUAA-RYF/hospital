@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">医院App</string>
+
+    <!-- FortuneActivity -->
+    <string name="fortune_today">今日运势</string>
+    <string name="fortune_week">本周运势</string>
+    <string name="fortune_month">本月运势</string>
+    <string name="fortune_year">本年运势</string>
+
+    <!-- Toolbar -->
+    <string name="toolbar_map">地图</string>
+
+    <!-- Nav_Menu -->
+    <string name="nav_personal">个人中心</string>
+    <string name="nav_weight">健康检测</string>
+    <string name="nav_child">生男生女</string>
+
+    <!-- Nav_Head -->
+    <string name="nav_name">未登录</string>
+
+    <!-- BMI Activity-->
+    <string name="bmi_submit">提交</string>
+    <string name="bmi_error_height">身高不能为空!</string>
+    <string name="bmi_error_weight">体重不能为空!</string>
+    <string name="bmi_error_gender">请选择性别!</string>
+    <string name="bmi_hint_height">请输入身高,单位厘米(CM).</string>
+    <string name="bmi_hint_weight">请输入体重,单位千克(KG).</string>
+
+    <!-- MonthGender Fragment-->
+    <string name="monthGender_submit">提交</string>
+    <string name="monthGender_hint_age">请输入您的年龄</string>
+
+    <!-- GenderMonth Fragment-->
+    <string name="genderMonth_submit">提交</string>
+    <string name="genderMonth_age">请输入您的年龄</string>
+    <string name="genderMonth_help_age">年龄应不小于18且不大于45岁</string>
+
+</resources>

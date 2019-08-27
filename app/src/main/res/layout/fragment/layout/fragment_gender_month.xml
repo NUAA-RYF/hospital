@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.GenderMonthFragment">
+
+    <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+        android:id="@+id/gender_month_age"
+        android:layout_width="@dimen/EditText_Width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textSize="@dimen/EditText_TextSize"
+        android:textColor="@color/Black"
+        android:hint="@string/genderMonth_age"
+        app:met_helperText="@string/genderMonth_help_age"
+        app:met_validateOnFocusLost="true"
+        app:met_autoValidate="true"
+        app:met_bottomTextSize="14sp"
+        app:met_underlineColor="@color/Crimson"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <com.xuexiang.xui.widget.spinner.materialspinner.MaterialSpinner
+        android:id="@+id/gender_month_gender"
+        android:layout_width="@dimen/EditText_Width"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/Black"
+        android:textSize="@dimen/EditText_TextSize"
+        app:layout_constraintTop_toBottomOf="@id/gender_month_age"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+        android:id="@+id/gender_month_submit"
+        android:layout_width="@dimen/SuperButton_Width"
+        android:layout_height="wrap_content"
+        android:text="@string/genderMonth_submit"
+        android:textColor="@color/White"
+        app:sSolidColor="@color/xui_config_color_red"
+        app:sCornersRadius="@dimen/SuperButton_CornerRadius"
+        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
