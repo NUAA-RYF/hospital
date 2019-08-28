@@ -2,11 +2,12 @@
 <litepal>
     <dbname value="Hospital"/>
 
-    <version value="5"/>
+    <version value="6"/>
 
     <list>
         <mapping class="com.thundersoft.hospital.model.Constellation"/>
         <mapping class="com.thundersoft.hospital.model.Solarterm"/>
         <mapping class="com.thundersoft.hospital.model.JieQi"/>
+        <mapping class="com.thundersoft.hospital.model.IllnessInfo"/>
     </list>
 </litepal>

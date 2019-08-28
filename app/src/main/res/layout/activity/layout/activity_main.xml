@@ -32,8 +32,9 @@
         <com.xuexiang.xui.widget.tabbar.TabSegment
             android:id="@+id/main_tabSegment"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="52dp"
             app:ts_has_indicator="false"
+            android:textSize="14sp"
             app:ts_icon_position="top"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

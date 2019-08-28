@@ -19,6 +19,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.thundersoft.hospital.R;
 import com.thundersoft.hospital.adapter.PagerAdapter;
 import com.thundersoft.hospital.fragment.HomeFragment;
+import com.thundersoft.hospital.fragment.InfoFragment;
 import com.thundersoft.hospital.fragment.PersonalFragment;
 import com.xuexiang.xui.utils.StatusBarUtils;
 import com.xuexiang.xui.widget.tabbar.TabSegment;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private void initData() {
         List<Fragment> mFragmentList = new ArrayList<>();
         mFragmentList.add(HomeFragment.newInstance());
-        mFragmentList.add(PersonalFragment.newInstance());
+        mFragmentList.add(InfoFragment.newInstance());
         mFragmentList.add(PersonalFragment.newInstance());
         mAdapter = new PagerAdapter(getSupportFragmentManager(), mFragmentList);
 
@@ -131,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //适配器和底部导航栏
-        mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(0);
+        mViewPager.setAdapter(mAdapter);
         mTabSegment.addTab(mTab_Home);
         mTabSegment.addTab(mTab_Message);
         mTabSegment.addTab(mTab_Me);

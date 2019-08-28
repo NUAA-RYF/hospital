@@ -19,4 +19,8 @@
     <dimen name="TextView_Width">300dp</dimen>
     <dimen name="TextView_Size">18sp</dimen>
 
+    <!-- CardView -->
+    <dimen name="CardView_Radius">8dp</dimen>
+    <dimen name="CardView_Elevation">8dp</dimen>
+
 </resources>

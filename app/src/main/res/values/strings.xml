@@ -35,4 +35,6 @@
     <string name="genderMonth_age">请输入您的年龄</string>
     <string name="genderMonth_help_age">年龄应不小于18且不大于45岁</string>
 
+    <!-- Info Fragment -->
+    <string name="Info_FAB_Add">添加</string>
 </resources>
