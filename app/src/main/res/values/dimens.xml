@@ -23,4 +23,7 @@
     <dimen name="CardView_Radius">8dp</dimen>
     <dimen name="CardView_Elevation">8dp</dimen>
 
+    <!-- SolarTerm Item -->
+    <dimen name="SolarTerm_Width">165dp</dimen>
+
 </resources>

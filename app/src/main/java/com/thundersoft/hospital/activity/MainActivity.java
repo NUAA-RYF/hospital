@@ -2,8 +2,10 @@ package com.thundersoft.hospital.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -47,13 +49,16 @@ public class MainActivity extends AppCompatActivity {
     private TabSegment.Tab mTab_Home;
     private TabSegment.Tab mTab_Message;
     private TabSegment.Tab mTab_Me;
-
+    private long mExitTimes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        //初始化数据
         initData();
+        //初始化控件
         initControls();
     }
 
@@ -63,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
      * 底部导航栏Tab初始化
      */
     private void initData() {
+        mExitTimes = System.currentTimeMillis();
+
         List<Fragment> mFragmentList = new ArrayList<>();
         mFragmentList.add(HomeFragment.newInstance());
         mFragmentList.add(InfoFragment.newInstance());
@@ -132,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //适配器和底部导航栏
-        mViewPager.setOffscreenPageLimit(0);
         mViewPager.setAdapter(mAdapter);
         mTabSegment.addTab(mTab_Home);
         mTabSegment.addTab(mTab_Message);
@@ -169,5 +175,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - mExitTimes > 2000){
+            mExitTimes = System.currentTimeMillis();
+            Toast.makeText(this, "再次点击返回键退出!", Toast.LENGTH_SHORT).show();
+        }else {
+            super.onBackPressed();
+        }
     }
 }

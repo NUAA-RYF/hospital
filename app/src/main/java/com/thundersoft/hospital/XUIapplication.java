@@ -12,4 +12,5 @@ public class XUIapplication extends LitePalApplication {
         XUI.debug(true);
         super.onCreate();
     }
+
 }

@@ -160,7 +160,6 @@ public class HomeFragment extends Fragment {
             String address = "https://api.jisuapi.com/jieqi/query?appkey=" + KEY + "&year=";
             queryFromServer(address, QUERY_SOLARTERMS);
         } else {
-            Log.i(TAG, "querySolarTerms: 二十四节气数据改变!");
             mSolarTermsAdapter.notifyDataSetChanged();
         }
     }
@@ -171,7 +170,6 @@ public class HomeFragment extends Fragment {
     private void queryConstellation() {
         mConstellationList.clear();
         mConstellationList.addAll(DataSupport.limit(12).find(Constellation.class));
-        Log.i(TAG, "queryConstellation: size:" + mConstellationList.size());
         if (mConstellationList.size() <= 0) {
             String address = "https://api.jisuapi.com/astro/all?appkey=" + KEY;
             queryFromServer(address, QUERY_CONSTELLATION);
