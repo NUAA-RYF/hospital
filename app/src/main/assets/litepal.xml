@@ -2,7 +2,7 @@
 <litepal>
     <dbname value="Hospital"/>
 
-    <version value="6"/>
+    <version value="7"/>
 
     <list>
         <mapping class="com.thundersoft.hospital.model.Constellation"/>

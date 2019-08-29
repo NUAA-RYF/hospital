@@ -217,9 +217,7 @@ public class HomeFragment extends Fragment {
 
                 if (result) {
                     Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                        if (isConLoadingFinished && isSolLoadingFinished){
-                            closeProgressDialog();
-                        }
+                        closeProgressDialog();
                         switch (Type) {
                             case QUERY_CONSTELLATION:
                                 queryDate();

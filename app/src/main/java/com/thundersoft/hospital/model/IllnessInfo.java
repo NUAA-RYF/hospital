@@ -6,8 +6,10 @@ public class IllnessInfo extends DataSupport {
     private int id;
 
     private String userId;
+    private String userAge;
     private String userName;
     private String userPhone;
+    private String userGender;
     private String userAddress;
     private String userIllnessName;
     private String userIllnessInfo;
@@ -22,6 +24,22 @@ public class IllnessInfo extends DataSupport {
 
     public String getUserIllnessName() {
         return userIllnessName;
+    }
+
+    public String getUserAge() {
+        return userAge;
+    }
+
+    public void setUserAge(String userAge) {
+        this.userAge = userAge;
+    }
+
+    public String getUserGender() {
+        return userGender;
+    }
+
+    public void setUserGender(String userGender) {
+        this.userGender = userGender;
     }
 
     public void setUserIllnessName(String userIllnessName) {

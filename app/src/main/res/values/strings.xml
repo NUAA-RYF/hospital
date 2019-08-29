@@ -37,4 +37,21 @@
 
     <!-- Info Fragment -->
     <string name="Info_FAB_Add">添加</string>
+    <string name="Info_FAB_Refresh">刷新</string>
+
+    <!-- Info Item -->
+    <string name="Info_Address">地址: </string>
+    <string name="Info_Content">病情: </string>
+
+    <!-- Edit Illness Activity -->
+    <string name="Add_Illness_Submit">提交</string>
+    <string name="Add_Illness_Name">疾病名称: </string>
+    <string name="Add_Illness_userName">姓    名: </string>
+    <string name="Add_Illness_Phone">手机号码: </string>
+    <string name="Add_Illness_Address">地        址: </string>
+    <string name="Add_Illness_Age">年    龄: </string>
+    <string name="Add_Illness_Gender">性     别: </string>
+    <string name="Add_Illness_Content">病    情: </string>
+    <string name="Add_Illness_FetchLocation">获取当前位置</string>
+
 </resources>

@@ -39,5 +39,15 @@
             app:fab_size="mini"
             app:fab_title="@string/Info_FAB_Add"
             app:fab_icon="@mipmap/icon_add"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/info_fab_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/xui_config_color_red"
+            app:fab_colorPressed="@color/Crimson"
+            app:fab_size="mini"
+            app:fab_title="@string/Info_FAB_Refresh"
+            app:fab_icon="@mipmap/icon_refresh"/>
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </androidx.constraintlayout.widget.ConstraintLayout>

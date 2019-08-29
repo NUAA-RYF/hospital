@@ -27,20 +27,38 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.ChildActivity"></activity>
-        <activity android:name=".activity.BMIActivity" /> <!-- 高德地图API KEY -->
+
+        <!-- 添加疾病信息 -->
+        <activity android:name=".activity.EditIllnessActivity"/>
+
+        <!-- 生男生女小功能 -->
+        <activity android:name=".activity.ChildActivity" />
+
+        <!-- BMI健康体脂检测 -->
+        <activity android:name=".activity.BMIActivity" />
+
+        <!-- 高德地图API KEY -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="59c8c399ac9dc7e490637998987dd191" />
 
-        <service android:name="com.amap.api.location.APSService" /> <!-- 地图 -->
+        <!-- 高德地图定位服务 -->
+        <service android:name="com.amap.api.location.APSService" />
+
+        <!-- 地图 -->
         <activity android:name=".activity.MapActivity" />
+
+        <!-- 星座运势 -->
         <activity
             android:name=".activity.FortuneActivity"
             android:theme="@style/SFActivityTheme" />
+
+        <!-- 节气详情 -->
         <activity
             android:name=".activity.SolarTermActivity"
             android:theme="@style/SFActivityTheme" />
+
+        <!-- 主活动 -->
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
@@ -50,6 +68,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 引导页 -->
         <activity android:name=".activity.GuideActivity" />
     </application>
 

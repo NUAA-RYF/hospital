@@ -2,7 +2,7 @@ package com.thundersoft.hospital.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -25,6 +25,7 @@ import com.thundersoft.hospital.fragment.InfoFragment;
 import com.thundersoft.hospital.fragment.PersonalFragment;
 import com.xuexiang.xui.utils.StatusBarUtils;
 import com.xuexiang.xui.widget.tabbar.TabSegment;
+import com.xuexiang.xui.widget.toast.XToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
         mTabSegment.setupWithViewPager(mViewPager, false, true);
     }
 
-
     /**
      * 菜单栏选择
      * 侧方导航栏
@@ -170,18 +170,28 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
+    /**
+     * 菜单栏显示
+     * @param menu 菜单
+     * @return 成功返回true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
     }
 
+    /**
+     * 时差不超过2秒
+     * 点击两次返回键退出程序
+     */
     @Override
     public void onBackPressed() {
         if (System.currentTimeMillis() - mExitTimes > 2000){
             mExitTimes = System.currentTimeMillis();
-            Toast.makeText(this, "再次点击返回键退出!", Toast.LENGTH_SHORT).show();
+            Toast normal = XToast.normal(this,"再次点击返回键,退出程序!");
+            normal.setGravity(Gravity.CENTER,0,0);
+            normal.show();
         }else {
             super.onBackPressed();
         }
