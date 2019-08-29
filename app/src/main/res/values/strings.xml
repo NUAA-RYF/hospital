@@ -1,5 +1,5 @@
-<resources>
-    <string name="app_name">医院App</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="PrivateResource">医院App</string>
 
     <!-- FortuneActivity -->
     <string name="fortune_today">今日运势</string>
@@ -42,6 +42,7 @@
     <!-- Info Item -->
     <string name="Info_Address">地址: </string>
     <string name="Info_Content">病情: </string>
+    <string name="Info_First_Aid">一键急救</string>
 
     <!-- Edit Illness Activity -->
     <string name="Add_Illness_Submit">提交</string>

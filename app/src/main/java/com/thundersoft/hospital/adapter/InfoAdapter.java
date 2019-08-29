@@ -19,6 +19,7 @@ import com.thundersoft.hospital.model.IllnessInfo;
 import com.xuexiang.xui.adapter.simple.XUISimpleAdapter;
 import com.xuexiang.xui.widget.button.shadowbutton.RippleShadowShadowButton;
 import com.xuexiang.xui.widget.popupwindow.popup.XUISimplePopup;
+import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 import com.xuexiang.xui.widget.toast.XToast;
 
 import java.util.List;
@@ -93,6 +94,13 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
 
             mPopupMenu.showDown(view);
         });
+
+        //一键急救
+        holder.mFirstAid.setOnClickListener(view -> {
+            Toast firstAid = XToast.info(mContext,"一键急救!");
+            firstAid.setGravity(Gravity.CENTER,0,0);
+            firstAid.show();
+        });
     }
 
     @Override
@@ -114,6 +122,8 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
         TextView mAddress;
         @BindView(R.id.info_content_input)
         TextView mContent;
+        @BindView(R.id.info_first_aid)
+        SuperButton mFirstAid;
 
         ViewHolder(View view) {
             super(view);
