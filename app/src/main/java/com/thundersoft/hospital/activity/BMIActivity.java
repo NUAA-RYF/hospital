@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -16,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 
 import com.thundersoft.hospital.R;
 import com.thundersoft.hospital.model.BMI;
@@ -28,7 +26,6 @@ import com.xuexiang.xui.widget.dialog.MiniLoadingDialog;
 import com.xuexiang.xui.widget.edittext.ClearEditText;
 import com.xuexiang.xui.widget.popupwindow.bar.CookieBar;
 import com.xuexiang.xui.widget.spinner.materialspinner.MaterialSpinner;
-import com.xuexiang.xui.widget.textview.label.LabelView;
 import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 import com.xuexiang.xui.widget.toast.XToast;
 
@@ -122,7 +119,7 @@ public class BMIActivity extends AppCompatActivity {
             String gender = String.valueOf(mGender.getText());
             Map<String, String> isAvailable = infoIsAvailable(height, weight, gender);
 
-            if (isAvailable.get("type").equals("success")) {
+            if (Objects.requireNonNull(isAvailable.get("type")).equals("success")) {
                 showMiniDialog();
                 //从网络获取数据
                 String address = "https://api.jisuapi.com/weight/bmi?appkey=" + KEY
@@ -159,7 +156,7 @@ public class BMIActivity extends AppCompatActivity {
                     }
                 });
             }else {
-                Toast warning = XToast.warning(mContext,isAvailable.get("msg"));
+                Toast warning = XToast.warning(mContext, Objects.requireNonNull(isAvailable.get("msg")));
                 warning.setGravity(Gravity.CENTER,0,0);
                 warning.show();
             }

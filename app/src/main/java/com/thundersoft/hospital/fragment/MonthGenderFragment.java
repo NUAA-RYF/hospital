@@ -31,7 +31,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -106,8 +108,8 @@ public class MonthGenderFragment extends Fragment {
         mSubmit.setOnClickListener(view -> {
             String age = String.valueOf(mAge.getText());
             String month = String.valueOf(mMonth.getText());
-            boolean result = isInputAvailable(age, month);
-            if (result) {
+            Map<String, String> available = isInputAvailable(age, month);
+            if (Objects.requireNonNull(available.get("type")).equals("success")) {
                 //请求地址
                 String address = "https://api.jisuapi.com/snsn/sex?appkey=" + KEY +
                         "&age=" + age +
@@ -138,6 +140,11 @@ public class MonthGenderFragment extends Fragment {
                         }
                     }
                 });
+            }else {
+                //输入不合法
+                Toast warning = XToast.warning(mContext, Objects.requireNonNull(available.get("msg")));
+                warning.setGravity(Gravity.CENTER,0,0);
+                warning.show();
             }
         });
     }
@@ -148,36 +155,35 @@ public class MonthGenderFragment extends Fragment {
      * @param month 月份
      * @return 成功返回true
      */
-    private boolean isInputAvailable(String age, String month) {
+    private Map<String,String> isInputAvailable(String age, String month) {
+        Map<String,String> ret = new HashMap<>();
         if (TextUtils.isEmpty(age)) {
-            Toast error = XToast.error(mContext, "请输入年龄!");
-            error.setGravity(Gravity.CENTER, 0, 0);
-            error.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","请输入年龄!");
+            return ret;
         }else {
             for (int i = 0; i < age.length(); i++) {
                 char a = age.charAt(i);
                 if (a > '9' || a < '0') {
-                    Toast error = XToast.error(mContext, "输入年龄仅能为数字!");
-                    error.setGravity(Gravity.CENTER, 0, 0);
-                    error.show();
-                    return false;
+                    ret.put("type","error");
+                    ret.put("msg","输入年龄仅能为数字!");
+                    return ret;
                 }
             }
         }
         if (Integer.parseInt(age) < 18 || Integer.parseInt(age) > 45){
-            Toast error = XToast.error(mContext, "年龄要不小于18岁且不大于45岁喔!");
-            error.setGravity(Gravity.CENTER, 0, 0);
-            error.show();
-            return false;
+
+            ret.put("type","error");
+            ret.put("msg","年龄要不小于18岁且不大于45岁喔!");
+            return ret;
         }
         if (month.equals("请选择月份")) {
-            Toast error = XToast.error(mContext, "请选择月份!");
-            error.setGravity(Gravity.CENTER, 0, 0);
-            error.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","请选择月份");
+            return ret;
         }
-        return true;
+        ret.put("type","success");
+        return ret;
     }
 
     /**

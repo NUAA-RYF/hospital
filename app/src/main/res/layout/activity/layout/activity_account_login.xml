@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.AccountLoginActivity">
+
+    <ImageView
+        android:id="@+id/account_login_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/drawable_logo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/account_login_cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/Black"
+        app:layout_constraintVertical_bias="0.35"
+        app:cardCornerRadius="@dimen/CardView_Radius"
+        app:cardElevation="@dimen/CardView_Elevation"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#60d00000">
+            <com.xuexiang.xui.widget.edittext.ClearEditText
+                android:id="@+id/account_login_account"
+                android:layout_width="@dimen/EditText_Width"
+                android:layout_height="@dimen/EditText_Height"
+                android:textColor="@color/Black"
+                android:textSize="@dimen/EditText_TextSize"
+                android:layout_marginTop="20dp"
+                android:textColorHint="@color/White"
+                android:maxLines="1"
+                android:hint="@string/account_login_account"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <com.xuexiang.xui.widget.edittext.PasswordEditText
+                android:id="@+id/account_login_password"
+                android:layout_width="@dimen/EditText_Width"
+                android:layout_height="@dimen/EditText_Height"
+                android:hint="@string/account_login_password"
+                android:textSize="@dimen/TextView_Size"
+                android:textColor="@color/White"
+                android:textColorHint="@color/White"
+                android:textColorHighlight="@color/White"
+                app:layout_constraintTop_toBottomOf="@id/account_login_account"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+                android:id="@+id/account_login_phone"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/account_login_phone"
+                android:textColor="@color/White"
+                app:sCornersRadius="10dp"
+                app:sSolidColor="@color/xui_config_color_red"
+                app:layout_constraintTop_toBottomOf="@id/account_login_password"
+                app:layout_constraintLeft_toLeftOf="@id/account_login_password"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/account_login_help_phone"
+                android:textColor="@color/White"
+                app:layout_constraintTop_toTopOf="@id/account_login_phone"
+                app:layout_constraintLeft_toRightOf="@id/account_login_phone"
+                app:layout_constraintBottom_toBottomOf="@id/account_login_phone"/>
+
+            <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+                android:id="@+id/account_login_signUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/account_login_signUp"
+                android:textColor="@color/White"
+                app:sCornersRadius="10dp"
+                app:sSolidColor="@color/xui_config_color_red"
+                app:layout_constraintTop_toBottomOf="@id/account_login_password"
+                app:layout_constraintRight_toRightOf="@id/account_login_password"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+        android:id="@+id/account_login_login"
+        android:layout_width="@dimen/SuperButton_Width"
+        android:layout_height="wrap_content"
+        android:text="@string/account_login_login"
+        android:textColor="@color/White"
+        app:layout_constraintVertical_bias="0.7"
+        app:sSolidColor=""
+        app:sCornersRadius="@dimen/SuperButton_CornerRadius"
+        app:layout_constraintTop_toBottomOf="@id/account_login_cardView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

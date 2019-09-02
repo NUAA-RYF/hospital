@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -213,7 +214,7 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
                 //是否合法
                 Map<String, String> available = isInputAvailable(illName, userName, phone, age, gender, address, content);
 
-                if (available.get("type").equals("success")) {
+                if (Objects.requireNonNull(available.get("type")).equals("success")) {
                     //添加信息操作
                     if (handle == ADD) {
                         IllnessInfo mInfo = new IllnessInfo();
@@ -252,7 +253,7 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
                     }
                 }else {
                     //输入信息不正确,提示用户
-                    Toast warning = XToast.warning(mContext,available.get("msg"));
+                    Toast warning = XToast.warning(mContext, Objects.requireNonNull(available.get("msg")));
                     warning.setGravity(Gravity.CENTER,0,0);
                     warning.show();
                 }

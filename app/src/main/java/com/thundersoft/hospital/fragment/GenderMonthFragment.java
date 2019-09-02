@@ -32,7 +32,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -114,10 +116,11 @@ public class GenderMonthFragment extends Fragment {
             //获取年龄和性别并且验证是否合法
             String age = String.valueOf(mAge.getText());
             String gender = String.valueOf(mGender.getText());
-            boolean result = isInputAvailable(age, gender);
+
+            Map<String, String> available = isInputAvailable(age, gender);
 
             //若合法
-            if (result) {
+            if (Objects.requireNonNull(available.get("type")).equals("success")) {
                 String address = "https://api.jisuapi.com/snsn/month?appkey=" + KEY +
                         "&age=" + age +
                         "&sex=" + gender;
@@ -161,6 +164,11 @@ public class GenderMonthFragment extends Fragment {
                         }
                     }
                 });
+            }else {
+                //输入不合法
+                Toast warning = XToast.warning(mContext, Objects.requireNonNull(available.get("msg")));
+                warning.setGravity(Gravity.CENTER,0,0);
+                warning.show();
             }
         });
     }
@@ -171,36 +179,34 @@ public class GenderMonthFragment extends Fragment {
      * @param gender 性别
      * @return 成功返回true
      */
-    private boolean isInputAvailable(String age, String gender) {
+    private Map<String,String> isInputAvailable(String age, String gender) {
+        Map<String,String> ret = new HashMap<>();
         if (TextUtils.isEmpty(age)) {
-            Toast error = XToast.error(mContext, "请输入年龄!");
-            error.setGravity(Gravity.CENTER, 0, 0);
-            error.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","请输入年龄!");
+            return ret;
         } else {
             for (int i = 0; i < age.length(); i++) {
                 char a = age.charAt(i);
                 if (a > '9' || a < '0') {
-                    Toast error = XToast.error(mContext, "输入年龄仅能为数字!");
-                    error.setGravity(Gravity.CENTER, 0, 0);
-                    error.show();
-                    return false;
+                    ret.put("type","error");
+                    ret.put("msg","输入年龄仅能为数字!");
+                    return ret;
                 }
             }
         }
         if (Integer.parseInt(age) < 18 || Integer.parseInt(age) > 45){
-            Toast error = XToast.error(mContext, "年龄要不小于18岁且不大于45岁喔!");
-            error.setGravity(Gravity.CENTER, 0, 0);
-            error.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","年龄要不小于18岁且不大于45岁喔!");
+            return ret;
         }
         if (gender.equals("请选择性别")) {
-            Toast error = XToast.error(mContext, "请选择性别!");
-            error.setGravity(Gravity.CENTER, 0, 0);
-            error.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","请选择性别!");
+            return ret;
         }
-        return true;
+        ret.put("type","success");
+        return ret;
     }
 
     @SuppressLint("HandlerLeak")
