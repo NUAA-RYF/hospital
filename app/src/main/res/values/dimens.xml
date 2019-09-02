@@ -17,6 +17,7 @@
 
     <!-- TextView -->
     <dimen name="TextView_Width">300dp</dimen>
+    <dimen name="TextView_Height">50dp</dimen>
     <dimen name="TextView_Size">18sp</dimen>
 
     <!-- CardView -->

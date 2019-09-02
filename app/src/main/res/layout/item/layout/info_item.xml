@@ -12,9 +12,11 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_marginTop="10dp"
@@ -48,31 +50,110 @@
                 app:layout_constraintRight_toRightOf="parent"
                 />
 
-            <!-- 姓名和电话号码 -->
+            <!-- 姓名 -->
             <TextView
-                android:id="@+id/info_name_phone"
-                android:layout_width="0dp"
+                android:id="@+id/info_name_text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/TextView_Size"
                 android:textColor="@color/Black"
+                android:text="@string/Info_Name"
+                android:textSize="@dimen/TextView_Size"
                 android:layout_marginTop="10dp"
                 android:gravity="start|center_vertical"
                 app:layout_constraintTop_toBottomOf="@id/info_illness_name"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"/>
 
-            <!-- 年龄和性别 -->
             <TextView
-                android:id="@+id/info_age_gender"
-                android:layout_width="0dp"
+                android:id="@+id/info_name"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/TextView_Size"
                 android:textColor="@color/Black"
                 android:layout_marginTop="10dp"
                 android:gravity="start|center_vertical"
-                app:layout_constraintTop_toBottomOf="@id/info_name_phone"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                android:layout_marginStart="10dp"
+                app:layout_constraintTop_toBottomOf="@id/info_illness_name"
+                app:layout_constraintLeft_toRightOf="@id/info_name_text"
+                />
+            <!-- 手机号 -->
+            <TextView
+                android:id="@+id/info_phone_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/Black"
+                android:text="@string/Info_Phone"
+                android:textSize="@dimen/TextView_Size"
+                android:gravity="start|center_vertical"
+                app:layout_constraintTop_toTopOf="@id/info_name"
+                app:layout_constraintLeft_toRightOf="@id/info_name"
+                app:layout_constraintBottom_toBottomOf="@id/info_name"/>
+
+            <TextView
+                android:id="@+id/info_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="@dimen/TextView_Size"
+                android:textColor="@color/Black"
+                android:gravity="start|center_vertical"
+                app:layout_constraintLeft_toRightOf="@id/info_phone_text"
+                app:layout_constraintTop_toTopOf="@id/info_phone_text"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/info_phone_text"/>
+
+            <!-- 年龄 -->
+            <TextView
+                android:id="@+id/info_age_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/Black"
+                android:text="@string/Info_Age"
+                android:textSize="@dimen/TextView_Size"
+                android:layout_marginTop="10dp"
+                android:gravity="start|center_vertical"
+                app:layout_constraintTop_toBottomOf="@id/info_name_text"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <TextView
+                android:id="@+id/info_age"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/TextView_Size"
+                android:textColor="@color/Black"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:layout_marginStart="10dp"
+                app:layout_constraintTop_toBottomOf="@id/info_name"
+                app:layout_constraintLeft_toRightOf="@id/info_age_text"
+                />
+            <!-- 性别 -->
+            <TextView
+                android:id="@+id/info_gender_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/Black"
+                android:text="@string/Info_Gender"
+                android:textSize="@dimen/TextView_Size"
+                android:gravity="start|center_vertical"
+
+                app:layout_constraintTop_toTopOf="@id/info_age"
+                app:layout_constraintLeft_toRightOf="@id/info_age"
+                app:layout_constraintBottom_toBottomOf="@id/info_age"/>
+
+            <TextView
+                android:id="@+id/info_gender"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="@dimen/TextView_Size"
+                android:textColor="@color/Black"
+                android:gravity="center"
+                app:layout_constraintLeft_toRightOf="@id/info_gender_text"
+                app:layout_constraintTop_toTopOf="@id/info_gender_text"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/info_gender_text"/>
 
             <!-- 地址 -->
             <TextView
@@ -84,7 +165,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/Info_Address"
                 android:gravity="start|center_vertical"
-                app:layout_constraintTop_toBottomOf="@id/info_age_gender"
+                app:layout_constraintTop_toBottomOf="@id/info_age"
                 app:layout_constraintLeft_toLeftOf="parent"
                 />
 
@@ -93,6 +174,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="start|center_vertical"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="2dp"
                 app:layout_constraintTop_toTopOf="@+id/info_address"
                 app:layout_constraintLeft_toRightOf="@+id/info_address"
                 app:layout_constraintRight_toRightOf="parent"
@@ -117,11 +200,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="start|center_vertical"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="2dp"
                 app:layout_constraintTop_toTopOf="@+id/info_content"
                 app:layout_constraintLeft_toRightOf="@+id/info_content"
                 app:layout_constraintRight_toRightOf="parent"
                 />
 
+            <!-- 一键急救 -->
             <com.xuexiang.xui.widget.textview.supertextview.SuperButton
                 android:id="@+id/info_first_aid"
                 android:layout_width="@dimen/SuperButton_Width"

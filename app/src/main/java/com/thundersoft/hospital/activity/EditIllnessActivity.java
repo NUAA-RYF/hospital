@@ -33,7 +33,9 @@ import com.xuexiang.xui.widget.toast.XToast;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -209,9 +211,9 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
                 String content = mEditContent.getContentText();
 
                 //是否合法
-                boolean result = isInputAvailable(illName, userName, phone, age, gender, address, content);
+                Map<String, String> available = isInputAvailable(illName, userName, phone, age, gender, address, content);
 
-                if (result) {
+                if (available.get("type").equals("success")) {
                     //添加信息操作
                     if (handle == ADD) {
                         IllnessInfo mInfo = new IllnessInfo();
@@ -248,6 +250,11 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
                         sendBroadcast(intent);
                         finish();
                     }
+                }else {
+                    //输入信息不正确,提示用户
+                    Toast warning = XToast.warning(mContext,available.get("msg"));
+                    warning.setGravity(Gravity.CENTER,0,0);
+                    warning.show();
                 }
                 break;
         }
@@ -265,7 +272,7 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
      * @param content   疾病详情 不能为空
      * @return 合法返回true
      */
-    private boolean isInputAvailable(String ill_name, String user_name,
+    private Map<String,String> isInputAvailable(String ill_name, String user_name,
                                      String phone, String age, String gender,
                                      String address, String content) {
         /*
@@ -276,35 +283,31 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
           疾病详情
           性别
          */
+        Map<String,String> ret = new HashMap<>();
         if (ill_name.equals("")) {
-            Toast warning = XToast.warning(mContext, "请填写疾病名称!");
-            warning.setGravity(Gravity.CENTER, 0, 0);
-            warning.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","请填写疾病名称!");
+            return ret;
         }
         if (user_name.equals("")) {
-            Toast warning = XToast.warning(mContext, "请填写病人姓名!");
-            warning.setGravity(Gravity.CENTER, 0, 0);
-            warning.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","请填写病人姓名!");
+            return ret;
         }
         if (address.equals("")) {
-            Toast warning = XToast.warning(mContext, "请填写详细地址!");
-            warning.setGravity(Gravity.CENTER, 0, 0);
-            warning.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","请填写详细地址!");
+            return ret;
         }
         if (content.equals("")) {
-            Toast warning = XToast.warning(mContext, "请填写疾病详情!");
-            warning.setGravity(Gravity.CENTER, 0, 0);
-            warning.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","请填写疾病详情!");
+            return ret;
         }
         if (gender.equals("请选择性别")) {
-            Toast warning = XToast.warning(mContext, "请选择性别!");
-            warning.setGravity(Gravity.CENTER, 0, 0);
-            warning.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","请选择性别!");
+            return ret;
         }
 
         /*
@@ -313,45 +316,40 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
           年龄
          */
         if (phone.equals("")) {
-            Toast warning = XToast.warning(mContext, "请填写11位手机号码!");
-            warning.setGravity(Gravity.CENTER, 0, 0);
-            warning.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","请填写11位手机号码!");
+            return ret;
         } else {
             for (int i = 0; i < phone.length(); i++) {
                 char word = phone.charAt(i);
                 if (word > '9' || word < '0') {
-                    Toast warning = XToast.warning(mContext, "手机号仅能为数字!");
-                    warning.setGravity(Gravity.CENTER, 0, 0);
-                    warning.show();
-                    return false;
+                    ret.put("type","error");
+                    ret.put("msg","手机号仅能为数字!");
+                    return ret;
                 }
             }
             if (phone.length() != 11) {
-                Toast warning = XToast.warning(mContext, "手机号码为11位!");
-                warning.setGravity(Gravity.CENTER, 0, 0);
-                warning.show();
-                return false;
+                ret.put("type","error");
+                ret.put("msg","手机号码为11位!");
+                return ret;
             }
         }
         if (age.equals("")) {
-            Toast warning = XToast.warning(mContext, "请填写年龄!");
-            warning.setGravity(Gravity.CENTER, 0, 0);
-            warning.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","请填写年龄!");
+            return ret;
         } else {
             for (int i = 0; i < age.length(); i++) {
                 char word = age.charAt(i);
                 if (word > '9' || word < '0') {
-                    Toast warning = XToast.warning(mContext, "年龄仅能为数字!");
-                    warning.setGravity(Gravity.CENTER, 0, 0);
-                    warning.show();
-                    return false;
+                    ret.put("type","error");
+                    ret.put("msg","年龄仅能为数字!");
+                    return ret;
                 }
             }
         }
-
-        return true;
+        ret.put("type","success");
+        return ret;
     }
 
     /**

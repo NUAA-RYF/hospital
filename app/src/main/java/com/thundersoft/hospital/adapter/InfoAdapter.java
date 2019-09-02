@@ -49,9 +49,12 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         IllnessInfo mInfo = mIllnessInfoList.get(position);
+
         holder.mIllnessName.setText(mInfo.getUserIllnessName());
-        holder.mNamePhone.setText(String.format("姓名: %s      手机号:%s", mInfo.getUserName(), mInfo.getUserPhone()));
-        holder.mAgeGender.setText(String.format("年龄: %s      性  别:  %s", mInfo.getUserAge(), mInfo.getUserGender()));
+        holder.mName.setText(mInfo.getUserName());
+        holder.mPhone.setText(mInfo.getUserPhone());
+        holder.mAge.setText(mInfo.getUserAge());
+        holder.mGender.setText(mInfo.getUserGender());
         holder.mAddress.setText(mInfo.getUserAddress());
         holder.mContent.setText(mInfo.getUserIllnessInfo());
 
@@ -65,7 +68,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
                 String result = String.valueOf(item.getTitle());
                 switch (result) {
                     case "编辑":
-                        Intent editInfo = new Intent(mContext,EditIllnessActivity.class);
+                        Intent editInfo = new Intent(mContext, EditIllnessActivity.class);
                         editInfo.putExtra("handle", EditIllnessActivity.CHANGE);
                         editInfo.putExtra("illnessId", mInfo.getId());
                         mContext.startActivity(editInfo);
@@ -76,16 +79,16 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
                         mBuilder.setPositiveButton("删除", (dialogInterface, i) -> {
                             mInfo.delete();
                             dialogInterface.dismiss();
-                            Toast success = XToast.success(mContext,"删除成功!");
-                            success.setGravity(Gravity.CENTER,0,0);
+                            Toast success = XToast.success(mContext, "删除成功!");
+                            success.setGravity(Gravity.CENTER, 0, 0);
                             success.show();
 
                             //发送数据改变广播
                             Intent intent = new Intent("com.thundersoft.hospital.broadcast.DATA_CHANGE");
                             mContext.sendBroadcast(intent);
                         }).setTitle("正在删除")
-                                .setNegativeButton("取消",((dialogInterface, i) -> dialogInterface.dismiss()))
-                                .setMessage("是否要删除"+mInfo.getUserIllnessName()+"?")
+                                .setNegativeButton("取消", ((dialogInterface, i) -> dialogInterface.dismiss()))
+                                .setMessage("是否要删除" + mInfo.getUserIllnessName() + "?")
                                 .show();
                         break;
                 }
@@ -97,8 +100,8 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
 
         //一键急救
         holder.mFirstAid.setOnClickListener(view -> {
-            Toast firstAid = XToast.info(mContext,"一键急救!");
-            firstAid.setGravity(Gravity.CENTER,0,0);
+            Toast firstAid = XToast.info(mContext, "一键急救!");
+            firstAid.setGravity(Gravity.CENTER, 0, 0);
             firstAid.show();
         });
     }
@@ -114,10 +117,14 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
         TextView mIllnessName;
         @BindView(R.id.info_menu)
         RippleShadowShadowButton mMenu;
-        @BindView(R.id.info_name_phone)
-        TextView mNamePhone;
-        @BindView(R.id.info_age_gender)
-        TextView mAgeGender;
+        @BindView(R.id.info_name)
+        TextView mName;
+        @BindView(R.id.info_phone)
+        TextView mPhone;
+        @BindView(R.id.info_age)
+        TextView mAge;
+        @BindView(R.id.info_gender)
+        TextView mGender;
         @BindView(R.id.info_address_input)
         TextView mAddress;
         @BindView(R.id.info_content_input)

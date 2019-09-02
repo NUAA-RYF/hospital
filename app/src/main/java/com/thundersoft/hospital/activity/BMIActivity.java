@@ -36,7 +36,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -118,9 +120,9 @@ public class BMIActivity extends AppCompatActivity {
             String height = String.valueOf(mHeight.getText());
             String weight = String.valueOf(mWeight.getText());
             String gender = String.valueOf(mGender.getText());
-            boolean infoIsAvailable = infoIsAvailable(height, weight, gender);
+            Map<String, String> isAvailable = infoIsAvailable(height, weight, gender);
 
-            if (infoIsAvailable) {
+            if (isAvailable.get("type").equals("success")) {
                 showMiniDialog();
                 //从网络获取数据
                 String address = "https://api.jisuapi.com/weight/bmi?appkey=" + KEY
@@ -156,6 +158,10 @@ public class BMIActivity extends AppCompatActivity {
                         }
                     }
                 });
+            }else {
+                Toast warning = XToast.warning(mContext,isAvailable.get("msg"));
+                warning.setGravity(Gravity.CENTER,0,0);
+                warning.show();
             }
         });
     }
@@ -169,47 +175,56 @@ public class BMIActivity extends AppCompatActivity {
      * @return 若不为空, 则返回true
      */
     @SuppressLint("CheckResult")
-    private boolean infoIsAvailable(String height, String weight, String gender) {
+    private Map<String,String> infoIsAvailable(String height, String weight, String gender) {
+        Map<String,String> ret = new HashMap<>();
+        /*
+        身高不为空
+        且仅能为数字
+         */
         if (TextUtils.isEmpty(height)) {
-            Toast error = XToast.error(mContext,R.string.bmi_error_height);
-            error.setGravity(Gravity.CENTER,0,0);
-            error.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","身高不能为空!");
+            return ret;
         }else {
             for (int i = 0; i < height.length(); i++) {
                 char a = height.charAt(i);
                 if (a > '9' || a < '0') {
-                    Toast error = XToast.error(mContext, "输入身高仅能为数字!");
-                    error.setGravity(Gravity.CENTER, 0, 0);
-                    error.show();
-                    return false;
+                    ret.put("type","error");
+                    ret.put("msg","输入身高仅能为数字!");
+                    return ret;
                 }
             }
         }
 
+        /*
+        体重不为空
+        且仅能为数字
+         */
         if (TextUtils.isEmpty(weight)) {
-            Toast error = XToast.error(mContext,R.string.bmi_error_weight);
-            error.setGravity(Gravity.CENTER,0,0);
-            error.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","体重不能为空!");
+            return ret;
         }else {
             for (int i = 0; i < weight.length(); i++) {
                 char a = weight.charAt(i);
                 if (a > '9' || a < '0') {
-                    Toast error = XToast.error(mContext, "输入体重仅能为数字!");
-                    error.setGravity(Gravity.CENTER, 0, 0);
-                    error.show();
-                    return false;
+                    ret.put("type","error");
+                    ret.put("msg","输入体重仅能为数字!");
+                    return ret;
                 }
             }
         }
+        /*
+        性别不为空
+         */
         if (gender.equals("请选择性别")) {
-            Toast error = XToast.error(mContext,R.string.bmi_error_gender);
-            error.setGravity(Gravity.CENTER,0,0);
-            error.show();
-            return false;
+            ret.put("type","error");
+            ret.put("msg","请选择性别!");
+            return ret;
         }
-        return true;
+
+        ret.put("type","success");
+        return ret;
     }
 
 

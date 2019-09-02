@@ -40,6 +40,10 @@
     <string name="Info_FAB_Refresh">刷新</string>
 
     <!-- Info Item -->
+    <string name="Info_Name">姓名: </string>
+    <string name="Info_Phone">手机号: </string>
+    <string name="Info_Age">年龄: </string>
+    <string name="Info_Gender">性别: </string>
     <string name="Info_Address">地址: </string>
     <string name="Info_Content">病情: </string>
     <string name="Info_First_Aid">一键急救</string>
