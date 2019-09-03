@@ -42,7 +42,7 @@ import okhttp3.Response;
 
 public class AccountLoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String HOSPITAL = "http://localhost:8080/hospital/system/";
+    private static final String HOSPITAL = "http://47.100.187.5:8080/hospital/system";
 
     private static final String LOGIN = "clientUserLogin";
 
