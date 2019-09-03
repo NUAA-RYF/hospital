@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
      * 底部导航栏Tab初始化
      */
     private void initData() {
+        ActivityController.addActivity(this);
+
         mExitTimes = System.currentTimeMillis();
 
         List<Fragment> mFragmentList = new ArrayList<>();
@@ -195,5 +197,11 @@ public class MainActivity extends AppCompatActivity {
         }else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityController.removeActivity(this);
     }
 }

@@ -4,19 +4,21 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.thundersoft.hospital.model.BMI;
 import com.thundersoft.hospital.model.Constellation;
 import com.thundersoft.hospital.model.GenderMonth;
 import com.thundersoft.hospital.model.JieQi;
 import com.thundersoft.hospital.model.MonthGender;
 import com.thundersoft.hospital.model.Solarterm;
-import com.thundersoft.hospital.model.Table;
+import com.thundersoft.hospital.model.User;
 import com.thundersoft.hospital.model.gson.Fortune.Fortune;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoadJsonUtil {
 
@@ -41,11 +43,6 @@ public class LoadJsonUtil {
                         String imgUrl = object.getString("pic");
                         String date = object.getString("time");
 
-                        Log.i(TAG, "SolarTerm: " + i);
-                        Log.i(TAG, "SolarTerm: " + jieqiId);
-                        Log.i(TAG, "SolarTerm: " + name);
-                        Log.i(TAG, "SolarTerm: " + imgUrl);
-                        Log.i(TAG, "SolarTerm: " + date);
                         Solarterm solarterm = new Solarterm(jieqiId, name, imgUrl, date);
                         solarterm.save();
                     }
@@ -78,14 +75,6 @@ public class LoadJsonUtil {
                     String xisu = object.getString("xisu");
                     String yangsheng = object.getString("yangsheng");
                     String imgUrl = object.getString("pic");
-
-                    Log.i(TAG, "JieQi: " + jieqiId);
-                    Log.i(TAG, "JieQi: " + name);
-                    Log.i(TAG, "JieQi: " + date);
-                    Log.i(TAG, "JieQi: " + jianjie);
-                    Log.i(TAG, "JieQi: " + youlai);
-                    Log.i(TAG, "JieQi: " + xisu);
-                    Log.i(TAG, "JieQi: " + yangsheng);
 
                     JieQi jieQi = new JieQi(jieqiId,name,date,jianjie,youlai,xisu,yangsheng,imgUrl);
                     jieQi.save();
@@ -120,12 +109,6 @@ public class LoadJsonUtil {
                         String astroName = object.getString("astroname");
                         String astroDate = object.getString("date");
                         String imgUrl = object.getString("pic");
-
-                        Log.i(TAG, "Constellation: " + i);
-                        Log.i(TAG, "Constellation: " + astroId);
-                        Log.i(TAG, "Constellation: " + astroName);
-                        Log.i(TAG, "Constellation: " + astroDate);
-                        Log.i(TAG, "Constellation: " + imgUrl);
 
                         Constellation constellation = new Constellation(astroId, astroName, astroDate, imgUrl);
                         constellation.save();
@@ -229,4 +212,59 @@ public class LoadJsonUtil {
     }
 
 
+    /**
+     * 解析登录成功后返回的用户信息
+     * @param response 用户信息
+     * @return         返回用户
+     */
+    public static User getUser(String response){
+        if (!TextUtils.isEmpty(response)){
+            try {
+                JSONObject msgAll = new JSONObject(response);
+                if (msgAll.getString("type").equals("success")){
+                    int id = Integer.parseInt(msgAll.getString("id"));
+                    String username = msgAll.getString("username");
+                    String password = msgAll.getString("password");
+                    String phone = msgAll.getString("phone");
+
+                    User user = new User(id,username,password,phone);
+                    user.save();
+                    return user;
+                }else {
+                    return null;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 注册获取ID
+     * @param response 返回信息
+     * @return 返回ID
+     */
+    public static Map<String,String> signUpAndGetIDORMsg(String response){
+        Map<String,String> ret = new HashMap<>();
+        if (!TextUtils.isEmpty(response)){
+            try {
+                JSONObject msgAll = new JSONObject(response);
+                if (msgAll.getString("type").equals("success")){
+                    ret.put("type","success");
+                    ret.put("id",msgAll.getString("id"));
+                    return ret;
+                }else {
+                    ret.put("type","error");
+                    ret.put("msg",msgAll.getString("msg"));
+                    return ret;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        ret.put("type","error");
+        ret.put("msg",null);
+        return ret;
+    }
 }

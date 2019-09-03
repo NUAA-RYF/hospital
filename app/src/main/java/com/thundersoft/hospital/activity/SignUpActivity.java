@@ -1,6 +1,11 @@
 package com.thundersoft.hospital.activity;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -13,21 +18,37 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.thundersoft.hospital.R;
+import com.thundersoft.hospital.model.User;
+import com.thundersoft.hospital.util.HttpUtil;
+import com.thundersoft.hospital.util.LoadJsonUtil;
 import com.xuexiang.xui.utils.StatusBarUtils;
 import com.xuexiang.xui.widget.edittext.PasswordEditText;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 import com.xuexiang.xui.widget.toast.XToast;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private static final String HOSPITAL = "http://localhost:8080/hospital/";
+
+    private static final String SIGN_UP = "clientUserSignUp";
+
+    private static final int CONNECTED_FAILED = 1;
+
+    private static final int SIGN_UP_FAILED = 2;
     @BindView(R.id.signUp_toolbar)
     Toolbar mToolbar;
     @BindView(R.id.signUp_account)
@@ -41,12 +62,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @BindView(R.id.signUp_signUp)
     SuperButton mSignUp;
 
+
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
-
+        ActivityController.addActivity(this);
+        mContext = this;
         //初始化控件
         initControls();
     }
@@ -92,7 +117,43 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             Map<String, String> available = isInputAvailable(account, password, repeat_password, phone);
             if (Objects.requireNonNull(available.get("type")).equals("success")){
                 //输入合法,向服务端提交数据
+                String address = HOSPITAL + SIGN_UP + "?username=" + account +
+                        "&password=" + password +
+                        "&phone=" + phone;
 
+                HttpUtil.sendOkHttpRequest(address, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = new Message();
+                        message.what = CONNECTED_FAILED;
+                        mHandler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String responseText = Objects.requireNonNull(response.body()).string();
+                        Map<String,String> ret = LoadJsonUtil.signUpAndGetIDORMsg(responseText);
+
+                        //获得用户ID,若不为0,则获取成功
+                        if (Objects.requireNonNull(ret.get("type")).equals("success")){
+                            int id = Integer.parseInt(Objects.requireNonNull(ret.get("id")));
+                            User user = new User(id,account,password,phone);
+                            user.save();
+                            Intent login = new Intent(mContext,MainActivity.class);
+                            Bundle userBundle = new Bundle();
+                            userBundle.putParcelable("user",user);
+                            login.putExtra("user",userBundle);
+                            startActivity(login);
+                        }else {
+                            if (ret.get("msg") != null){
+                                Message message = new Message();
+                                message.what = SIGN_UP_FAILED;
+                                message.obj = ret.get("msg");
+                                mHandler.sendMessage(message);
+                            }
+                        }
+                    }
+                });
             }else {
                 //输入不合法
                 Toast warning = XToast.warning(this, Objects.requireNonNull(available.get("msg")));
@@ -188,4 +249,29 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what){
+                case CONNECTED_FAILED:
+                    Toast connected = XToast.warning(mContext,"注册失败,请检查网络!");
+                    connected.setGravity(Gravity.CENTER,0,0);
+                    connected.show();
+                    break;
+                case SIGN_UP_FAILED:
+                    String info = String.valueOf(msg.obj);
+                    Toast signUp = XToast.warning(mContext,info);
+                    signUp.setGravity(Gravity.CENTER,0,0);
+                    signUp.show();
+                    break;
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityController.removeActivity(this);
+    }
 }

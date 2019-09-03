@@ -62,6 +62,8 @@ public class ChildActivity extends AppCompatActivity {
      * Tab控件
      */
     private void initData(){
+        ActivityController.addActivity(this);
+
         //初始化Fragment及其PagerAdapter
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(MonthGenderFragment.newInstance());
@@ -113,5 +115,11 @@ public class ChildActivity extends AppCompatActivity {
             this.finish();
         }
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityController.removeActivity(this);
     }
 }

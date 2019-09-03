@@ -35,8 +35,6 @@ import okhttp3.Response;
 
 public class SolarTermActivity extends AppCompatActivity {
 
-    private static final String TAG = "SolarTermActivity";
-
     private static final String KEY = "27e281130003dee5";
 
     @BindView(R.id.solar_img)
@@ -78,6 +76,7 @@ public class SolarTermActivity extends AppCompatActivity {
      * 获得气节ID
      */
     private void initData(){
+        ActivityController.addActivity(this);
         Intent intent = getIntent();
         jieqiId = intent.getStringExtra("jieqiId");
     }
@@ -110,6 +109,10 @@ public class SolarTermActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 从服务器获取数据
+     * @param address 地址
+     */
     private void queryFromServer(String address){
         showProgressDialog();
         HttpUtil.sendOkHttpRequest(address, new Callback() {
@@ -143,6 +146,11 @@ public class SolarTermActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 菜单栏选项
+     * @param item 返回选项
+     * @return 返回true
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -152,6 +160,10 @@ public class SolarTermActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    /**
+     * 打开加载提示框
+     */
     private void showProgressDialog(){
         if (mLoadingDialog == null){
             mLoadingDialog = new ProgressDialog(this);
@@ -161,9 +173,18 @@ public class SolarTermActivity extends AppCompatActivity {
         mLoadingDialog.show();
     }
 
+    /**
+     * 关闭加载提示框
+     */
     private void  closeProgressDialog(){
         if (mLoadingDialog != null){
             mLoadingDialog.dismiss();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityController.removeActivity(this);
     }
 }

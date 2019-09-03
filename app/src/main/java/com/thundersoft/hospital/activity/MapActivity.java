@@ -29,6 +29,8 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         ButterKnife.bind(this);
+        ActivityController.addActivity(this);
+
         mMapView.onCreate(savedInstanceState);
 
         initMap();
@@ -87,5 +89,6 @@ public class MapActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        ActivityController.removeActivity(this);
     }
 }

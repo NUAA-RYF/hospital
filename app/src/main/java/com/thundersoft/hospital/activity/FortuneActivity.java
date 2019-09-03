@@ -118,6 +118,7 @@ public class FortuneActivity extends AppCompatActivity {
      * 星座图片URL
      */
     private void initData() {
+        ActivityController.addActivity(this);
         fortuneId = getIntent().getStringExtra("fortuneId");
         imgUrl = getIntent().getStringExtra("imgUrl");
     }
@@ -218,6 +219,9 @@ public class FortuneActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 打开加载提示框
+     */
     private void showProgressDialog(){
         if (mLoadingDialog == null){
             mLoadingDialog = new ProgressDialog(this);
@@ -227,9 +231,18 @@ public class FortuneActivity extends AppCompatActivity {
         mLoadingDialog.show();
     }
 
+    /**
+     * 关闭加载提示框
+     */
     private void  closeProgressDialog(){
         if (mLoadingDialog != null){
             mLoadingDialog.dismiss();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityController.removeActivity(this);
     }
 }

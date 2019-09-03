@@ -14,6 +14,24 @@ public class IllnessInfo extends DataSupport {
     private String userIllnessName;
     private String userIllnessInfo;
 
+
+    public IllnessInfo() {
+        super();
+    }
+
+    public IllnessInfo(String userId, String userAge, String userName,
+                       String userPhone, String userGender, String userAddress,
+                       String userIllnessName, String userIllnessInfo) {
+        this.userId = userId;
+        this.userAge = userAge;
+        this.userName = userName;
+        this.userPhone = userPhone;
+        this.userGender = userGender;
+        this.userAddress = userAddress;
+        this.userIllnessName = userIllnessName;
+        this.userIllnessInfo = userIllnessInfo;
+    }
+
     public int getId() {
         return id;
     }

@@ -81,13 +81,7 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_illness);
-        ButterKnife.bind(this);
-        mContext = this;
-        mActivity = this;
-        Intent mIntent = getIntent();
-        //获取是添加操作还是修改操作
-        handle = mIntent.getIntExtra("handle", 0);
-        infoId = mIntent.getIntExtra("illnessId", 0);
+
 
         //初始化按键监听
         initClickListener();
@@ -104,6 +98,16 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
      * 编辑操作初始化控件
      */
     private void initData() {
+        mContext = this;
+        mActivity = this;
+        //控件绑定视图
+        ButterKnife.bind(this);
+        ActivityController.addActivity(this);
+
+        //获取是添加操作还是修改操作
+        Intent mIntent = getIntent();
+        handle = mIntent.getIntExtra("handle", 0);
+        infoId = mIntent.getIntExtra("illnessId", 0);
         mExitTimes = System.currentTimeMillis();
 
         //初始化下拉框
@@ -392,5 +396,11 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
         }else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityController.removeActivity(this);
     }
 }

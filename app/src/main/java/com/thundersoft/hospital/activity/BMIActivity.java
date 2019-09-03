@@ -87,6 +87,7 @@ public class BMIActivity extends AppCompatActivity {
      * 性别列表初始化
      */
     private void initData() {
+        ActivityController.addActivity(this);
         mContext = this;
         mActivity = this;
         mGenderList = new ArrayList<>();
@@ -289,4 +290,9 @@ public class BMIActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityController.removeActivity(this);
+    }
 }
