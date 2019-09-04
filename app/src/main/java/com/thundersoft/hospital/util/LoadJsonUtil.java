@@ -217,21 +217,22 @@ public class LoadJsonUtil {
      * @param response 用户信息
      * @return         返回用户
      */
-    public static User getUser(String response){
+    public static Map<String,String> getUser(String response){
+        Map<String,String> ret = new HashMap<>();
         if (!TextUtils.isEmpty(response)){
             try {
                 JSONObject msgAll = new JSONObject(response);
                 if (msgAll.getString("type").equals("success")){
-                    int id = Integer.parseInt(msgAll.getString("id"));
-                    String username = msgAll.getString("username");
-                    String password = msgAll.getString("password");
-                    String phone = msgAll.getString("phone");
-
-                    User user = new User(id,username,password,phone);
-                    user.save();
-                    return user;
+                    ret.put("type","success");
+                    ret.put("id",msgAll.getString("id"));
+                    ret.put("username",msgAll.getString("username"));
+                    ret.put("password",msgAll.getString("password"));
+                    ret.put("phone",msgAll.getString("phone"));
+                    return ret;
                 }else {
-                    return null;
+                    ret.put("type",msgAll.getString("type"));
+                    ret.put("msg",msgAll.getString("msg"));
+                    return ret;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

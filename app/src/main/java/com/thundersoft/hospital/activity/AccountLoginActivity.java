@@ -4,17 +4,21 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.thundersoft.hospital.R;
 import com.thundersoft.hospital.model.User;
 import com.thundersoft.hospital.util.HttpUtil;
@@ -40,13 +44,16 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.thundersoft.hospital.util.HttpUrl.ACCOUNT_LOGIN;
+import static com.thundersoft.hospital.util.HttpUrl.HOSPITAL;
+
 public class AccountLoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String HOSPITAL = "http://47.100.187.5:8080/hospital/system";
-
-    private static final String LOGIN = "clientUserLogin";
-
     private static final int LOGIN_FAILED = 1;
+
+    private static final int LOGIN_ERROR_MESSAGE = 2;
+
+    private static final int RET_ISNULL = 3;
 
     @BindView(R.id.account_login_account)
     ClearEditText mAccount;
@@ -58,6 +65,8 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
     SuperButton mSignUp;
     @BindView(R.id.account_login_login)
     SuperButton mLogin;
+    @BindView(R.id.account_login_img)
+    ImageView mImg;
 
     private Context mContext;
 
@@ -67,6 +76,7 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_login);
+        ButterKnife.bind(this);
 
         //初始化数据
         initData();
@@ -78,7 +88,7 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
      * 初始化数据
      * 活动,视图绑定
      */
-    private void initData(){
+    private void initData() {
         ActivityController.addActivity(this);
         ButterKnife.bind(this);
         mContext = this;
@@ -90,7 +100,9 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
      * 沉浸式状态栏
      * 账号登录 手机登录 注册点击监听
      */
-    private void initControls(){
+    private void initControls() {
+        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.drawable_logo);
+        Glide.with(this).load(bitmap).into(mImg);
         StatusBarUtils.translucent(this);
         mPhone.setOnClickListener(this);
         mLogin.setOnClickListener(this);
@@ -102,59 +114,88 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
      * 账号登录
      * 注册
      * 手机登录
+     *
      * @param view 视图
      */
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.account_login_login:
                 String account = String.valueOf(mAccount.getText());
                 String password = String.valueOf(mPassword.getText());
 
                 Map<String, String> available = isInputAvailable(account, password);
-                if (Objects.requireNonNull(available.get("type")).equals("success")){
+                if (Objects.requireNonNull(available.get("type")).equals("success")) {
                     //从数据库获取数据
-                    String address = HOSPITAL + LOGIN + "?username=" + account + "&password" + password;
-                    String body = userLogin(account,password);
-                    if (body == null){
+                    String address = HOSPITAL +
+                            ACCOUNT_LOGIN +
+                            "?username=" + account +
+                            "&password=" + password;
+                    String body = userLogin(account, password);
+                    if (body == null) {
                         break;
                     }
 
-                    HttpUtil.sendOkHttpRequest(address,new Callback() {
+                    HttpUtil.sendOkHttpRequest(address, new Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
                             Message message = new Message();
-                            message.what= LOGIN_FAILED;
+                            message.what = LOGIN_FAILED;
                             mHandler.sendMessage(message);
                         }
 
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             String responseText = Objects.requireNonNull(response.body()).string();
-                            User user = LoadJsonUtil.getUser(responseText);
+                            Map<String,String> ret = LoadJsonUtil.getUser(responseText);
+                            if (ret == null){
+                                Message message = new Message();
+                                message.what = LOGIN_FAILED;
+                                mHandler.sendMessage(message);
+                                return;
+                            }
+                            String type = ret.get("type");
 
-                            //将用户信息和意图捆绑
-                            Intent login = new Intent(mContext,MainActivity.class);
-                            Bundle userBundle = new Bundle();
-                            userBundle.putParcelable("user",user);
-                            login.putExtra("user",userBundle);
-                            startActivity(login);
-                            mActivity.finish();
+                            if(Objects.requireNonNull(type).equals("success")){
+                                //获得用户信息
+                                int id = Integer.parseInt(Objects.requireNonNull(ret.get("id")));
+                                String username = ret.get("username");
+                                String password = ret.get("password");
+                                String phone = ret.get("phone");
+                                User user = new User(id,username,password,phone);
+                                user.save();
+
+                                //将用户信息和意图捆绑
+                                Intent login = new Intent(mContext, MainActivity.class);
+                                Bundle userBundle = new Bundle();
+                                userBundle.putParcelable("user", user);
+                                login.putExtra("user", userBundle);
+                                startActivity(login);
+                                mActivity.finish();
+                            }else {
+                                String msg = ret.get("msg");
+                                Message message = new Message();
+                                message.what = LOGIN_ERROR_MESSAGE;
+                                message.obj = msg;
+                                mHandler.sendMessage(message);
+                            }
+
                         }
                     });
-                }else {
+                } else {
                     Toast warning = XToast.warning(this, Objects.requireNonNull(available.get("msg")));
-                    warning.setGravity(Gravity.CENTER,0,0);
+                    warning.setGravity(Gravity.CENTER, 0, 0);
                     warning.show();
                 }
 
                 break;
-            case R.id.signUp_signUp:
-                Intent signUp = new Intent(this,SignUpActivity.class);
+            case R.id.account_login_signUp:
+                Intent signUp = new Intent(this, SignUpActivity.class);
                 startActivity(signUp);
                 break;
             case R.id.account_login_phone:
-
+                Intent phoneLogin = new Intent(this,PhoneLoginActivity.class);
+                startActivity(phoneLogin);
                 break;
 
         }
@@ -162,37 +203,39 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * 输入是否合法
+     *
      * @param account  用户名
      * @param password 密码
-     * @return         返回Map映射
+     * @return 返回Map映射
      */
-    private Map<String,String> isInputAvailable(String account,String password){
-        Map<String,String> ret = new HashMap<>();
-        if (TextUtils.isEmpty(account)){
-            ret.put("type","error");
-            ret.put("msg","账号不得为空!");
+    private Map<String, String> isInputAvailable(String account, String password) {
+        Map<String, String> ret = new HashMap<>();
+        if (TextUtils.isEmpty(account)) {
+            ret.put("type", "error");
+            ret.put("msg", "账号不得为空!");
             return ret;
         }
-        if (TextUtils.isEmpty(password)){
-            ret.put("type","error");
-            ret.put("msg","密码不得为空!");
+        if (TextUtils.isEmpty(password)) {
+            ret.put("type", "error");
+            ret.put("msg", "密码不得为空!");
             return ret;
         }
-        ret.put("type","success");
+        ret.put("type", "success");
         return ret;
     }
 
     /**
      * 用户登录信息
+     *
      * @param username 用户名
      * @param password 密码
-     * @return         返回JSON格式字符串
+     * @return 返回JSON格式字符串
      */
-    private String userLogin(String username,String password){
+    private String userLogin(String username, String password) {
         JSONObject object = new JSONObject();
         try {
-            object.put("username",username);
-            object.put("password",password);
+            object.put("username", username);
+            object.put("password", password);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -202,14 +245,25 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
 
 
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case LOGIN_FAILED:
-                    Toast warning = XToast.warning(mContext,"登录失败,请检查网络!");
-                    warning.setGravity(Gravity.CENTER,0,0);
+                    Toast warning = XToast.warning(mContext, "登录失败,请检查网络!");
+                    warning.setGravity(Gravity.CENTER, 0, 0);
                     warning.show();
+                    break;
+                case LOGIN_ERROR_MESSAGE:
+                    String errorMsg = String.valueOf(msg.obj);
+                    Toast error = XToast.error(mContext, errorMsg);
+                    error.setGravity(Gravity.CENTER, 0, 0);
+                    error.show();
+                    break;
+                case RET_ISNULL:
+                    Toast retIsNull = XToast.warning(mContext, "登录失败,返回信息为空!");
+                    retIsNull.setGravity(Gravity.CENTER, 0, 0);
+                    retIsNull.show();
                     break;
             }
         }

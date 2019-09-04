@@ -3,7 +3,6 @@ package com.thundersoft.hospital.fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +42,6 @@ import okhttp3.Response;
 
 public class HomeFragment extends Fragment {
 
-    private static final String TAG = "HomeFragment";
-
     private static final String KEY = "27e281130003dee5";
 
     private static final int QUERY_CONSTELLATION = 1;
@@ -80,16 +77,6 @@ public class HomeFragment extends Fragment {
 
     private boolean isDialogOpen;
 
-    private boolean isConLoadingFinished;
-
-    private boolean isSolLoadingFinished;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment HomeFragment.
-     */
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -138,8 +125,6 @@ public class HomeFragment extends Fragment {
         mConstellationList = DataSupport.findAll(Constellation.class);
         mSolartermList = DataSupport.findAll(Solarterm.class);
         isDialogOpen = false;
-        isConLoadingFinished = false;
-        isSolLoadingFinished = false;
     }
 
     /**
@@ -205,11 +190,9 @@ public class HomeFragment extends Fragment {
                 switch (Type) {
                     case QUERY_CONSTELLATION:
                         result = LoadJsonUtil.Constellation(responseText);
-                        isConLoadingFinished = true;
                         break;
                     case QUERY_SOLARTERMS:
                         result = LoadJsonUtil.SolarTerm(responseText);
-                        isSolLoadingFinished = true;
                         break;
                     default:
                         break;
