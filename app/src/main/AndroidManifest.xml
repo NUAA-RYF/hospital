@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.thundersoft.hospital">
-    <!-- 允许程序打开网络套接字 -->
-    <!-- 允许程序设置内置sd卡的写权限 -->
+    <!-- 允许程序获取网络状态 -->
     <application
         android:name=".XUIapplication"
         android:allowBackup="true"
@@ -13,8 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.PhoneLoginActivity"></activity>
-        <!-- 登录页面 -->
+        <activity android:name=".activity.PersonalActivity"/>
+        <activity android:name=".activity.PhoneLoginActivity" /> <!-- 登录页面 -->
         <activity android:name=".activity.AccountLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,21 +34,23 @@
             android:theme="@style/SFActivityTheme" /> <!-- 星座运势 -->
         <activity
             android:name=".activity.MainActivity"
-            android:screenOrientation="portrait"></activity> <!-- 节气详情 -->
+            android:screenOrientation="portrait">
+
+        </activity> <!-- 节气详情 -->
         <!-- 主活动 -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="59c8c399ac9dc7e490637998987dd191" /> <!-- 引导页 -->
         <service android:name="com.amap.api.location.APSService" />
-    </application> <!-- 允许程序获取网络状态 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 允许程序访问WiFi网络信息 -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许程序读写手机状态和身份 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 用于读取手机当前的状态 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于申请调用A-GPS模块 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于申请获取蓝牙信息进行室内定位 -->
+    </application> <!-- 允许程序访问WiFi网络信息 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 允许程序读写手机状态和身份 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于申请获取蓝牙信息进行室内定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />

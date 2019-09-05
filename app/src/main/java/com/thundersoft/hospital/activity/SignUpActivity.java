@@ -134,6 +134,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 HttpUtil.sendOkHttpRequest(address, new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        //网络连接失败,向用户提示
                         Message message = new Message();
                         message.what = CONNECTED_FAILED;
                         mHandler.sendMessage(message);

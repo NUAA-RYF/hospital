@@ -13,5 +13,9 @@
             android:id="@+id/nav_child"
             android:icon="@mipmap/icon_nav_child"
             android:title="@string/nav_child"/>
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@mipmap/icon_logout"
+            android:title="@string/nav_logout"/>
     </group>
 </menu>

@@ -32,6 +32,7 @@ import com.xuexiang.xui.widget.toast.XToast;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -78,6 +79,8 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_account_login);
         ButterKnife.bind(this);
 
+        //免验证登录
+        secondLoginWithoutRequest();
         //初始化数据
         initData();
         //初始化控件
@@ -131,10 +134,6 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
                             ACCOUNT_LOGIN +
                             "?username=" + account +
                             "&password=" + password;
-                    String body = userLogin(account, password);
-                    if (body == null) {
-                        break;
-                    }
 
                     HttpUtil.sendOkHttpRequest(address, new Callback() {
                         @Override
@@ -166,11 +165,11 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
                                 user.save();
 
                                 //将用户信息和意图捆绑
-                                Intent login = new Intent(mContext, MainActivity.class);
+                                Intent loginIntent = new Intent(mContext, MainActivity.class);
                                 Bundle userBundle = new Bundle();
                                 userBundle.putParcelable("user", user);
-                                login.putExtra("user", userBundle);
-                                startActivity(login);
+                                loginIntent.putExtra("user", userBundle);
+                                startActivity(loginIntent);
                                 mActivity.finish();
                             }else {
                                 String msg = ret.get("msg");
@@ -224,26 +223,11 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
         return ret;
     }
 
+
     /**
-     * 用户登录信息
-     *
-     * @param username 用户名
-     * @param password 密码
-     * @return 返回JSON格式字符串
+     * 登录失败,返回提示信息
+     * 在主线程中处理UI更新
      */
-    private String userLogin(String username, String password) {
-        JSONObject object = new JSONObject();
-        try {
-            object.put("username", username);
-            object.put("password", password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return object.toString();
-    }
-
-
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -277,5 +261,21 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
     protected void onDestroy() {
         super.onDestroy();
         ActivityController.removeActivity(this);
+    }
+
+    /**
+     * 第二次登录免验证
+     */
+    private void secondLoginWithoutRequest(){
+        User user = DataSupport.findFirst(User.class);
+        if (user != null){
+            //将用户信息与意图捆绑并进入意图
+            Intent loginIntent = new Intent(mContext, MainActivity.class);
+            Bundle userBundle = new Bundle();
+            userBundle.putParcelable("user", user);
+            loginIntent.putExtra("user", userBundle);
+            startActivity(loginIntent);
+            mActivity.finish();
+        }
     }
 }

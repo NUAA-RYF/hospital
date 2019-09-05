@@ -2,15 +2,20 @@ package com.thundersoft.hospital.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -23,9 +28,12 @@ import com.thundersoft.hospital.adapter.PagerAdapter;
 import com.thundersoft.hospital.fragment.HomeFragment;
 import com.thundersoft.hospital.fragment.InfoFragment;
 import com.thundersoft.hospital.fragment.PersonalFragment;
+import com.thundersoft.hospital.model.User;
 import com.xuexiang.xui.utils.StatusBarUtils;
 import com.xuexiang.xui.widget.tabbar.TabSegment;
 import com.xuexiang.xui.widget.toast.XToast;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +42,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
 
     @BindView(R.id.main_viewPager)
     ViewPager mViewPager;
@@ -51,12 +61,17 @@ public class MainActivity extends AppCompatActivity {
     private TabSegment.Tab mTab_Message;
     private TabSegment.Tab mTab_Me;
     private long mExitTimes;
+
+    private User mCurrentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        //获取用户信息
+        getUserInfoFromIntent();
         //初始化数据
         initData();
         //初始化控件
@@ -116,25 +131,61 @@ public class MainActivity extends AppCompatActivity {
         //状态栏沉浸式
         StatusBarUtils.translucent(this);
 
+        //导航栏头部用户信息
+        ConstraintLayout constraintLayout = (ConstraintLayout) mNavigation.inflateHeaderView(R.layout.nav_header);
+        TextView userName = constraintLayout.findViewById(R.id.nav_HeadName);
+        TextView userPhone = constraintLayout.findViewById(R.id.nav_HeadPhone);
+        if (mCurrentUser != null){
+            userName.setText(mCurrentUser.getUserName());
+            userPhone.setText(mCurrentUser.getPhone());
+        }else {
+            userName.setText("未登录");
+            userPhone.setText("手机号码");
+        }
+
         //抽屉式侧方导航栏
-        mNavigation.setCheckedItem(R.id.nav_child);
-        mNavigation.setCheckedItem(R.id.nav_weight);
         mNavigation.setCheckedItem(R.id.nav_personal);
 
         mNavigation.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()){
                 case R.id.nav_personal:
+                    //个人中心
+                    Intent personalIntent = setUserInfoIntoIntent(mCurrentUser);
+                    personalIntent.setClass(this,PersonalActivity.class);
+                    startActivity(personalIntent);
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
                     break;
                 case R.id.nav_weight:
-                    Intent bmi = new Intent(this,BMIActivity.class);
-                    startActivity(bmi);
+                    //健康检测
+                    Intent BMIIntent = new Intent(this,BMIActivity.class);
+                    startActivity(BMIIntent);
                     mDrawerLayout.closeDrawer(GravityCompat.START);
                     break;
                 case R.id.nav_child:
-                    Intent child = new Intent(this,ChildActivity.class);
-                    startActivity(child);
+                    //生男生女
+                    Intent childIntent = new Intent(this,ChildActivity.class);
+                    startActivity(childIntent);
                     mDrawerLayout.closeDrawer(GravityCompat.START);
                     break;
+                case R.id.nav_logout:
+                    AlertDialog.Builder mDialog = new AlertDialog.Builder(this);
+                    mDialog.setTitle("退出登录")
+                            .setMessage("是否确认退出登录?")
+                            .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss())
+                            .setPositiveButton("退出",(dialogInterface, i) -> {
+                                //删除用户信息
+                                DataSupport.deleteAll(User.class);
+
+                                //关闭对话框和侧方导航栏
+                                mDrawerLayout.closeDrawer(GravityCompat.START);
+                                dialogInterface.dismiss();
+
+                                //关闭所有活动,并进入登录页面
+                                ActivityController.finishAll();
+                                Intent loginIntent = new Intent(this,AccountLoginActivity.class);
+                                startActivity(loginIntent);
+                            })
+                            .show();
                 default:
                     break;
             }
@@ -203,5 +254,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         ActivityController.removeActivity(this);
+    }
+
+    /**
+     * 从意图中获取用户信息
+     */
+    private void getUserInfoFromIntent(){
+        Bundle userBundle = getIntent().getBundleExtra("user");
+        if (userBundle != null) {
+            mCurrentUser = (User) userBundle.get("user");
+        }else {
+            Log.e(TAG, "getUserInfoFromIntent: 用户信息为空!");
+        }
+    }
+
+    /**
+     * 将用户信息捆绑意图
+     * @param user 用户
+     * @return 返回意图
+     */
+    private Intent setUserInfoIntoIntent(User user){
+        Intent mIntent = new Intent();
+        Bundle userBundle = new Bundle();
+        userBundle.putParcelable("user",user);
+        mIntent.putExtra("user",userBundle);
+        return mIntent;
     }
 }

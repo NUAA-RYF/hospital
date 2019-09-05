@@ -16,7 +16,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <com.xuexiang.xui.widget.textview.label.LabelTextView
+    <TextView
         android:id="@+id/nav_HeadName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         app:layout_constraintRight_toRightOf="parent"/>
 
     <TextView
-        android:id="@+id/nav_HeadEmail"
+        android:id="@+id/nav_HeadPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/White"

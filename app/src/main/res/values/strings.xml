@@ -1,6 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" tools:ignore="PrivateResource">医院App</string>
 
+    <!-- Personal Activity -->
+    <string name="personal_username">用户名</string>
+    <string name="personal_password">密码</string>
+    <string name="personal_change_password">更改密码</string>
+    <string name="personal_phone">手机号</string>
+
     <!-- Phone Login Activity -->
     <string name="phone_login_phone">手机号</string>
     <string name="phone_login_verifyCode">验证码</string>
@@ -35,6 +41,7 @@
     <string name="nav_personal">个人中心</string>
     <string name="nav_weight">健康检测</string>
     <string name="nav_child">生男生女</string>
+    <string name="nav_logout">退出登录</string>
 
     <!-- Nav_Head -->
     <string name="nav_name">未登录</string>
