@@ -42,8 +42,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.thundersoft.hospital.util.HttpUrl.CLIENT_SIGN_UP;
 import static com.thundersoft.hospital.util.HttpUrl.HOSPITAL;
-import static com.thundersoft.hospital.util.HttpUrl.SIGN_UP;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -128,7 +128,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 //打开注册加载提示框
                 showLoadingDialog();
                 //输入合法,向服务端提交数据
-                String address = HOSPITAL + SIGN_UP + "?username=" + account +
+                String address = HOSPITAL + CLIENT_SIGN_UP + "?username=" + account +
                         "&password=" + password +
                         "&phone=" + phone;
                 HttpUtil.sendOkHttpRequest(address, new Callback() {

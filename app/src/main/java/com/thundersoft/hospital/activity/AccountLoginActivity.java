@@ -30,8 +30,6 @@ import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 import com.xuexiang.xui.widget.toast.XToast;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
@@ -45,7 +43,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.thundersoft.hospital.util.HttpUrl.ACCOUNT_LOGIN;
+import static com.thundersoft.hospital.util.HttpUrl.CLIENT_ACCOUNT_LOGIN;
 import static com.thundersoft.hospital.util.HttpUrl.HOSPITAL;
 
 public class AccountLoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -131,7 +129,7 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
                 if (Objects.requireNonNull(available.get("type")).equals("success")) {
                     //从数据库获取数据
                     String address = HOSPITAL +
-                            ACCOUNT_LOGIN +
+                            CLIENT_ACCOUNT_LOGIN +
                             "?username=" + account +
                             "&password=" + password;
 

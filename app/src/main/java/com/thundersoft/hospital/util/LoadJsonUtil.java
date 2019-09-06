@@ -1,11 +1,11 @@
 package com.thundersoft.hospital.util;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.thundersoft.hospital.model.BMI;
 import com.thundersoft.hospital.model.Constellation;
+import com.thundersoft.hospital.model.Disease;
 import com.thundersoft.hospital.model.GenderMonth;
 import com.thundersoft.hospital.model.JieQi;
 import com.thundersoft.hospital.model.MonthGender;
@@ -17,7 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LoadJsonUtil {
@@ -267,5 +269,96 @@ public class LoadJsonUtil {
         ret.put("type","error");
         ret.put("msg",null);
         return ret;
+    }
+
+
+    /**
+     * 获取疾病信息
+     * @param response 疾病信息
+     * @return         返回疾病列表
+     */
+    public static List<Disease> getDisease(String response){
+        List<Disease> diseaseList = new ArrayList<>();
+        if (!TextUtils.isEmpty(response)){
+            try {
+                JSONObject msgAll = new JSONObject(response);
+                if (msgAll.getString("type").equals("success")){
+                    JSONArray result = msgAll.getJSONArray("result");
+                    for (int i = 0; i < result.length(); i++) {
+                        Disease disease = new Gson().fromJson(result.getString(i),Disease.class);
+                        diseaseList.add(disease);
+                    }
+                    return diseaseList;
+                }else {
+                    return diseaseList;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return diseaseList;
+    }
+
+    /**
+     * 删除疾病信息
+     * @param response 返回信息
+     * @return         是否成功
+     */
+    public static boolean deleteInfo(String response){
+        if (!TextUtils.isEmpty(response)){
+            try {
+                JSONObject msgAll = new JSONObject(response);
+                if (msgAll.getString("type").equals("success")){
+                    return true;
+                }else {
+                    return false;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 按疾病ID获取疾病信息
+     * @param response 疾病信息
+     * @return         疾病信息
+     */
+    public static Disease getDisaseById(String response){
+        if (!TextUtils.isEmpty(response)){
+            try {
+                JSONObject msgAll = new JSONObject(response);
+                if (msgAll.getString("type").equals("success")){
+                    return new Gson().fromJson(msgAll.getString("result"),Disease.class);
+                }else {
+                    return null;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 检查获取的信息是否成功
+     * @param response 返回信息
+     * @return         返回成功与否
+     */
+    public static boolean messageIsSuccess(String response){
+        if (!TextUtils.isEmpty(response)){
+            try {
+                JSONObject msgAll = new JSONObject(response);
+                if (msgAll.getString("type").equals("success")){
+                    return true;
+                }else {
+                    return false;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 }
