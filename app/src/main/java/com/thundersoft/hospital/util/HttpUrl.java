@@ -14,7 +14,8 @@ public class HttpUrl {
      */
     public static final String DISEASE_INSERT = "/disease/addInfo/";
     public static final String DISEASE_UPDATE = "/disease/updateInfo/";
-    public static final String DISEASE_QUERY = "/disease/findInfoByUserName";
+    public static final String DISEASE_QUERY_USERNAME = "/disease/findInfoByUserName";
+    public static final String DISEASE_QUERY_ID = "/disease/findInfoById";
     public static final String DISEASE_DELETE = "/disease/deleteInfo";
 
 }

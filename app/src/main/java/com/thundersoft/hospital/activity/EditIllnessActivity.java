@@ -50,7 +50,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.thundersoft.hospital.util.HttpUrl.DISEASE_INSERT;
-import static com.thundersoft.hospital.util.HttpUrl.DISEASE_QUERY;
+import static com.thundersoft.hospital.util.HttpUrl.DISEASE_QUERY_ID;
 import static com.thundersoft.hospital.util.HttpUrl.DISEASE_UPDATE;
 import static com.thundersoft.hospital.util.HttpUrl.HOSPITAL;
 
@@ -392,7 +392,7 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
      * @param id 疾病ID
      */
     private void queryDiseaseInfoById(String id) {
-        String address = HOSPITAL + DISEASE_QUERY + "?id=" + id;
+        String address = HOSPITAL + DISEASE_QUERY_ID + "?id=" + id;
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {

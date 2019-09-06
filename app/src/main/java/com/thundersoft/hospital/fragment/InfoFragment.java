@@ -44,7 +44,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.thundersoft.hospital.util.HttpUrl.DISEASE_QUERY;
+import static com.thundersoft.hospital.util.HttpUrl.DISEASE_QUERY_USERNAME;
 import static com.thundersoft.hospital.util.HttpUrl.HOSPITAL;
 
 public class InfoFragment extends Fragment {
@@ -201,7 +201,7 @@ public class InfoFragment extends Fragment {
      */
     private void queryDiseaseInfoFromServer(){
         //查询疾病信息
-        String address = HOSPITAL + DISEASE_QUERY + "?username=" + mUser.getUserName();
+        String address = HOSPITAL + DISEASE_QUERY_USERNAME + "?username=" + mUser.getUserName();
         //发出网络请求
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             @Override
