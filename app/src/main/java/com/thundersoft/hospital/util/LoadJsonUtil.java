@@ -10,7 +10,6 @@ import com.thundersoft.hospital.model.GenderMonth;
 import com.thundersoft.hospital.model.JieQi;
 import com.thundersoft.hospital.model.MonthGender;
 import com.thundersoft.hospital.model.Solarterm;
-import com.thundersoft.hospital.model.User;
 import com.thundersoft.hospital.model.gson.Fortune.Fortune;
 
 import org.json.JSONArray;
@@ -23,9 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 public class LoadJsonUtil {
-
-    private static final String TAG = "LoadJsonUtil";
-
 
     /**
      * 从JSON格式中解析二十四节气
@@ -308,11 +304,7 @@ public class LoadJsonUtil {
         if (!TextUtils.isEmpty(response)){
             try {
                 JSONObject msgAll = new JSONObject(response);
-                if (msgAll.getString("type").equals("success")){
-                    return true;
-                }else {
-                    return false;
-                }
+                return msgAll.getString("type").equals("success");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -325,7 +317,7 @@ public class LoadJsonUtil {
      * @param response 疾病信息
      * @return         疾病信息
      */
-    public static Disease getDisaseById(String response){
+    public static Disease getDiseaseById(String response){
         if (!TextUtils.isEmpty(response)){
             try {
                 JSONObject msgAll = new JSONObject(response);
@@ -350,11 +342,7 @@ public class LoadJsonUtil {
         if (!TextUtils.isEmpty(response)){
             try {
                 JSONObject msgAll = new JSONObject(response);
-                if (msgAll.getString("type").equals("success")){
-                    return true;
-                }else {
-                    return false;
-                }
+                return msgAll.getString("type").equals("success");
             } catch (JSONException e) {
                 e.printStackTrace();
             }

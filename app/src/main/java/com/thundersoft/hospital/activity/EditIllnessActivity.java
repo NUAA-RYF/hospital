@@ -402,7 +402,7 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String responseText = Objects.requireNonNull(response.body()).string();
-                mDisease = LoadJsonUtil.getDisaseById(responseText);
+                mDisease = LoadJsonUtil.getDiseaseById(responseText);
                 if (mDisease != null) {
                     Message message = new Message();
                     message.what = QUERY_SUCCESS;
