@@ -8,7 +8,7 @@ public class HttpUrl {
      */
     public static final String CLIENT_SIGN_UP = "/client/clientUserSignUp";
     public static final String CLIENT_ACCOUNT_LOGIN = "/client/clientUserLogin";
-
+    public static final String PHONE_LOGIN = "";
     /**
      * 疾病信息操作
      */

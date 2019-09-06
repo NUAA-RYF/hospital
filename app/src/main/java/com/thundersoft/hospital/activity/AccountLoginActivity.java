@@ -77,12 +77,15 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_account_login);
         ButterKnife.bind(this);
 
-        //免验证登录
-        secondLoginWithoutRequest();
+
         //初始化数据
         initData();
+
         //初始化控件
         initControls();
+
+        //免验证登录
+        secondLoginWithoutRequest();
     }
 
     /**
@@ -268,7 +271,7 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
         User user = DataSupport.findFirst(User.class);
         if (user != null){
             //将用户信息与意图捆绑并进入意图
-            Intent loginIntent = new Intent(mContext, MainActivity.class);
+            Intent loginIntent = new Intent(this, MainActivity.class);
             Bundle userBundle = new Bundle();
             userBundle.putParcelable("user", user);
             loginIntent.putExtra("user", userBundle);

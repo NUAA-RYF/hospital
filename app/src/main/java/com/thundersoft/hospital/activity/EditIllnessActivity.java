@@ -103,12 +103,15 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
 
         //获取用户信息
         getUserInfoFromIntent();
-        //初始化按键监听
-        initClickListener();
+
         //初始化数据
         initData();
+
         //初始化控件
         initControls();
+
+        //初始化按键监听
+        initClickListener();
     }
 
 

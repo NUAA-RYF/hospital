@@ -160,6 +160,9 @@ public class InfoFragment extends Fragment {
         mFabAdd.setOnClickListener(view -> {
             Intent addInfo = new Intent(mContext, EditIllnessActivity.class);
             addInfo.putExtra("handle",EditIllnessActivity.ADD);
+            Bundle userBundle = new Bundle();
+            userBundle.putParcelable("user", mUser);
+            addInfo.putExtra("user", userBundle);
             mFabMenu.collapse();
             startActivity(addInfo);
         });
