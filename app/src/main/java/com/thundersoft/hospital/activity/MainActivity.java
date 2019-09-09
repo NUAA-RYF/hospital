@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +26,7 @@ import com.thundersoft.hospital.R;
 import com.thundersoft.hospital.adapter.PagerAdapter;
 import com.thundersoft.hospital.fragment.HomeFragment;
 import com.thundersoft.hospital.fragment.InfoFragment;
-import com.thundersoft.hospital.fragment.PersonalFragment;
+import com.thundersoft.hospital.fragment.FriendFragment;
 import com.thundersoft.hospital.model.User;
 import com.xuexiang.xui.utils.StatusBarUtils;
 import com.xuexiang.xui.widget.tabbar.TabSegment;
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         List<Fragment> mFragmentList = new ArrayList<>();
         mFragmentList.add(HomeFragment.newInstance());
         mFragmentList.add(InfoFragment.newInstance());
-        mFragmentList.add(PersonalFragment.newInstance());
+        mFragmentList.add(FriendFragment.newInstance());
         mAdapter = new PagerAdapter(getSupportFragmentManager(), mFragmentList);
 
         mTab_Home = new TabSegment.Tab(
@@ -109,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         mTab_Me = new TabSegment.Tab(
                 ContextCompat.getDrawable(this, R.mipmap.icon_personal),
                 null,
-                "我", true
+                "好友", true
         );
     }
 

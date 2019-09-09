@@ -1,7 +1,10 @@
 package com.thundersoft.hospital.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +45,11 @@ import static com.thundersoft.hospital.util.HttpUrl.HOSPITAL;
 public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
 
 
+    private static final int DELETE_SUCCESS = 1;
+
+    private static final int CONNECTED_FAILED = 2;
+
+    private static final int DELETE_FAILED = 3;
     private List<Disease> mDiseaseList;
 
     private Context mContext;
@@ -118,9 +126,10 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Toast warning = XToast.warning(mContext, "删除失败,请检查网络!");
-                warning.setGravity(Gravity.CENTER, 0, 0);
-                warning.show();
+                //删除失败,请检查网络
+                Message message = new Message();
+                message.what = CONNECTED_FAILED;
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -128,16 +137,19 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
                 String responseText = Objects.requireNonNull(response.body()).string();
                 boolean result = LoadJsonUtil.deleteInfo(responseText);
                 if (result){
-                    Toast success = XToast.success(mContext, "删除成功!");
-                    success.setGravity(Gravity.CENTER, 0, 0);
-                    success.show();
+                    //删除成功
+                    Message message = new Message();
+                    message.what = DELETE_SUCCESS;
+                    mHandler.sendMessage(message);
+
                     //发送数据改变广播
                     Intent intent = new Intent("com.thundersoft.hospital.broadcast.DATA_CHANGE");
                     mContext.sendBroadcast(intent);
                 }else {
-                    Toast warning = XToast.warning(mContext, "删除失败!");
-                    warning.setGravity(Gravity.CENTER, 0, 0);
-                    warning.show();
+                    //删除失败
+                    Message message = new Message();
+                    message.what = DELETE_FAILED;
+                    mHandler.sendMessage(message);
                 }
             }
         });
@@ -174,4 +186,28 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
         }
     }
 
+    @SuppressLint("HandlerLeak")
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+                case DELETE_SUCCESS:
+                    Toast delete_success = XToast.success(mContext, "删除成功!");
+                    delete_success.setGravity(Gravity.CENTER, 0, 0);
+                    delete_success.show();
+                    break;
+                case CONNECTED_FAILED:
+                    Toast connected_failed = XToast.warning(mContext, "删除失败,请检查网络!");
+                    connected_failed.setGravity(Gravity.CENTER, 0, 0);
+                    connected_failed.show();
+                    break;
+                case DELETE_FAILED:
+                    Toast delete_failed = XToast.warning(mContext, "删除失败!");
+                    delete_failed.setGravity(Gravity.CENTER, 0, 0);
+                    delete_failed.show();
+                default:
+                    break;
+            }
+        }
+    };
 }

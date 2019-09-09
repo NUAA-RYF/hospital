@@ -6,13 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.thundersoft.hospital.R;
 
-public class PersonalFragment extends Fragment {
-    public static PersonalFragment newInstance() {
-        PersonalFragment fragment = new PersonalFragment();
+public class FriendFragment extends Fragment {
+
+    public static FriendFragment newInstance() {
+        FriendFragment fragment = new FriendFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -26,11 +28,12 @@ public class PersonalFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_personal, container, false);
+        View view = inflater.inflate(R.layout.fragment_friend, container, false);
+        return view;
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
     }
 

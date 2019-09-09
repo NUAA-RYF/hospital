@@ -2,7 +2,9 @@ package com.thundersoft.hospital.activity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -35,7 +37,7 @@ public class PersonalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal);
         ButterKnife.bind(this);
-
+        ActivityController.addActivity(this);
         //获取用户信息
         getUserInfoFromIntent();
         //初始化控件
@@ -43,6 +45,10 @@ public class PersonalActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * 初始化控件
+     * 沉浸式状态栏和标题栏
+     */
     private void initControls() {
 
         //沉浸式状态栏和标题栏
@@ -73,5 +79,24 @@ public class PersonalActivity extends AppCompatActivity {
         } else {
             Log.e(TAG, "getUserInfoFromIntent: 用户信息为空!");
         }
+    }
+
+    /**
+     * 菜单栏选项
+     * @param item 选项
+     * @return 返回true
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityController.removeActivity(this);
     }
 }
