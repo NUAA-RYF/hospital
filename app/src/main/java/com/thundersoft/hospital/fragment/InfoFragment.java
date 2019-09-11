@@ -51,6 +51,7 @@ public class InfoFragment extends Fragment {
 
     private static final int QUERY_SUCCESS = 1;
     private static final int QUERY_FAILED = 2;
+    private static final int CONNECTED_FAILED = 3;
 
     @BindView(R.id.info_recyclerView)
     RecyclerView mRecyclerView;
@@ -209,16 +210,15 @@ public class InfoFragment extends Fragment {
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                //连接失败,请检查网络
-                Toast warning = XToast.warning(mContext, "连接失败,请检查网络!");
-                warning.setGravity(Gravity.CENTER, 0, 0);
-                warning.show();
+                Message message = new Message();
+                message.what = CONNECTED_FAILED;
+                mHandler.sendMessage(message);
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String responseText = Objects.requireNonNull(response.body()).string();
-                List<Disease> currentList = LoadJsonUtil.getDisease(responseText);
+                List<Disease> currentList = LoadJsonUtil.getDiseaseList(responseText);
                 Message message = new Message();
                 if (currentList.size() <= 0){
                     message.what = QUERY_FAILED;
@@ -244,6 +244,12 @@ public class InfoFragment extends Fragment {
                     Toast info = XToast.info(mContext, "暂无病情信息!");
                     info.setGravity(Gravity.CENTER, 0, 0);
                     info.show();
+                    break;
+                case CONNECTED_FAILED:
+                    //连接失败,请检查网络
+                    Toast warning = XToast.warning(mContext, "连接失败,请检查网络!");
+                    warning.setGravity(Gravity.CENTER, 0, 0);
+                    warning.show();
                     break;
             }
         }

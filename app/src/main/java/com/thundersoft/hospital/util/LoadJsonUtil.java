@@ -1,11 +1,13 @@
 package com.thundersoft.hospital.util;
 
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.thundersoft.hospital.model.BMI;
 import com.thundersoft.hospital.model.Constellation;
 import com.thundersoft.hospital.model.Disease;
+import com.thundersoft.hospital.model.Friend;
 import com.thundersoft.hospital.model.GenderMonth;
 import com.thundersoft.hospital.model.JieQi;
 import com.thundersoft.hospital.model.MonthGender;
@@ -273,7 +275,7 @@ public class LoadJsonUtil {
      * @param response 疾病信息
      * @return         返回疾病列表
      */
-    public static List<Disease> getDisease(String response){
+    public static List<Disease> getDiseaseList(String response){
         List<Disease> diseaseList = new ArrayList<>();
         if (!TextUtils.isEmpty(response)){
             try {
@@ -348,5 +350,52 @@ public class LoadJsonUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * 获取好友信息
+     * @param response 好友信息
+     * @return         获取好友列表
+     */
+    public static List<Friend> getFriendList(String response){
+        List<Friend> friendList = new ArrayList<>();
+        if (!TextUtils.isEmpty(response)){
+            try {
+                JSONObject msgAll = new JSONObject(response);
+                if (msgAll.getString("type").equals("success")){
+                    JSONArray result = msgAll.getJSONArray("result");
+                    for (int i = 0; i < result.length(); i++) {
+                        Friend friend = new Gson().fromJson(result.getString(i),Friend.class);
+                        friendList.add(friend);
+                    }
+                    return friendList;
+                }else {
+                    return friendList;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return friendList;
+    }
+
+    /**
+     * 按ID获取好友
+     * @param response 好友列表
+     * @return         好友列表
+     */
+    public static Friend getFriendById(String response){
+        if (!TextUtils.isEmpty(response)){
+            try {
+                JSONObject msgAll = new JSONObject(response);
+                if (msgAll.getString("type").equals("success")){
+                    return new Gson().fromJson(msgAll.getString("result"),Friend.class);
+                }
+                return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

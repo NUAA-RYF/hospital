@@ -50,6 +50,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
     private static final int CONNECTED_FAILED = 2;
 
     private static final int DELETE_FAILED = 3;
+
     private List<Disease> mDiseaseList;
 
     private Context mContext;

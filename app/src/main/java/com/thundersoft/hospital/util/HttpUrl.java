@@ -18,4 +18,13 @@ public class HttpUrl {
     public static final String DISEASE_QUERY_ID = "/disease/findInfoById";
     public static final String DISEASE_DELETE = "/disease/deleteInfo";
 
+    /**
+     * 好友信息操作
+     */
+    public static final String FRIEND_QUERY_USERNAME = "/friend/";
+    public static final String FRIEND_QUERY_ID = "/friend/";
+    public static final String FRIEND_INSERT = "/friend/";
+    public static final String FRIEND_UPDATE = "/friend/";
+    public static final String FRIEND_UPDATE_CLOSE = "/friend/";
+    public static final String FRIEND_DELETE = "/friend/";
 }
