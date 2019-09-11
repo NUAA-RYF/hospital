@@ -91,13 +91,18 @@ public class EditFriendActivity extends AppCompatActivity {
         //获取当前用户信息
         getUserInfoFromIntent();
 
+
         //初始化数据
         initData();
+
 
         //初始化控件
         initControls();
     }
 
+    /**
+     * 初始化数据
+     */
     private void initData() {
         mContext = this;
 
@@ -111,6 +116,9 @@ public class EditFriendActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 初始化控件
+     */
     private void initControls() {
 
         //沉浸式状态栏
@@ -193,9 +201,19 @@ public class EditFriendActivity extends AppCompatActivity {
             ret.put("msg", "姓名不得为空!");
             return ret;
         }
+        if (name.length() >= 10){
+            ret.put("type", "error");
+            ret.put("msg", "姓名不得多余10个字!");
+            return ret;
+        }
         if (TextUtils.isEmpty(relation)) {
             ret.put("type", "error");
             ret.put("msg", "关系不得为空!");
+            return ret;
+        }
+        if (relation.length() >= 6){
+            ret.put("type", "error");
+            ret.put("msg", "关系不得多于5个字!");
             return ret;
         }
         if (TextUtils.isEmpty(phone)) {
@@ -297,13 +315,11 @@ public class EditFriendActivity extends AppCompatActivity {
      * 从意图中获取用户信息
      */
     private void getUserInfoFromIntent() {
-        if (handle == ADD){
-            Bundle userBundle = getIntent().getBundleExtra("user");
-            if (userBundle != null) {
-                mCurrentUser = (User) userBundle.get("user");
-            } else {
-                Log.e(TAG, "getUserInfoFromIntent: 用户信息为空!");
-            }
+        Bundle userBundle = getIntent().getBundleExtra("user");
+        if (userBundle != null) {
+            mCurrentUser = (User) userBundle.get("user");
+        } else {
+            Log.e(TAG, "getUserInfoFromIntent: 用户信息为空!");
         }
     }
 }

@@ -1,0 +1,95 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="PrivateResource">医院App</string>
+
+    <!-- Edit Friend Activity -->
+    <string name="edit_friend_name">姓名:</string>
+    <string name="edit_friend_phone">手机号:</string>
+    <string name="edit_friend_relation">关系:</string>
+
+    <!-- Personal Activity -->
+    <string name="personal_username">用户名</string>
+    <string name="personal_password">密码</string>
+    <string name="personal_change_password">更改密码</string>
+    <string name="personal_phone">手机号</string>
+
+    <!-- Phone Login Activity -->
+    <string name="phone_login_phone">手机号</string>
+    <string name="phone_login_verifyCode">验证码</string>
+    <string name="phone_login_fetchCode">获取验证码</string>
+    <string name="phone_login_submit">登录</string>
+
+    <!-- Account Login Activity -->
+    <string name="account_login_account">账户</string>
+    <string name="account_login_password">密码</string>
+    <string name="account_login_login">登录</string>
+    <string name="account_login_signUp">注册</string>
+    <string name="account_login_phone">手机登录</string>
+    <string name="account_login_help_phone">无需注册呦!</string>
+
+    <!-- Sign Up Activity -->
+    <string name="signUp_hint_account">请输入您的账户</string>
+    <string name="signUp_hint_password">请输入您的密码</string>
+    <string name="signUp_hint_repeat_password">请再次输入您的密码</string>
+    <string name="signUp_hint_phone">请输入您的手机号码</string>
+    <string name="signUp_hint_signUp">注册</string>
+
+    <!-- FortuneActivity -->
+    <string name="fortune_today">今日运势</string>
+    <string name="fortune_week">本周运势</string>
+    <string name="fortune_month">本月运势</string>
+    <string name="fortune_year">本年运势</string>
+
+    <!-- Toolbar -->
+    <string name="toolbar_map">地图</string>
+
+    <!-- Nav_Menu -->
+    <string name="nav_personal">个人中心</string>
+    <string name="nav_weight">健康检测</string>
+    <string name="nav_child">生男生女</string>
+    <string name="nav_logout">退出登录</string>
+
+    <!-- Nav_Head -->
+    <string name="nav_name">未登录</string>
+
+    <!-- BMI Activity-->
+    <string name="bmi_submit">提交</string>
+    <string name="bmi_hint_height">请输入身高,单位厘米(CM).</string>
+    <string name="bmi_hint_weight">请输入体重,单位千克(KG).</string>
+
+    <!-- MonthGender Fragment-->
+    <string name="monthGender_submit">提交</string>
+    <string name="monthGender_hint_age">请输入您的年龄</string>
+
+    <!-- GenderMonth Fragment-->
+    <string name="genderMonth_submit">提交</string>
+    <string name="genderMonth_age">请输入您的年龄</string>
+    <string name="genderMonth_help_age">年龄应不小于18且不大于45岁</string>
+
+    <!-- Info Fragment -->
+    <string name="Info_FAB_Add">添加</string>
+    <string name="Info_FAB_Refresh">刷新</string>
+
+    <!-- Info Item -->
+    <string name="Info_Name">姓名: </string>
+    <string name="Info_Phone">手机号: </string>
+    <string name="Info_Age">年龄: </string>
+    <string name="Info_Gender">性别: </string>
+    <string name="Info_Address">地址: </string>
+    <string name="Info_Content">病情: </string>
+    <string name="Info_First_Aid">一键急救</string>
+
+    <!--Friend Item-->
+    <string name="Friend_Edit">编辑</string>
+
+    <!-- Edit Illness Activity -->
+    <string name="Add_Illness_Submit">提交</string>
+    <string name="Add_Illness_Name">疾病名称: </string>
+    <string name="Add_Illness_userName">姓    名: </string>
+    <string name="Add_Illness_Phone">手机号码: </string>
+    <string name="Add_Illness_Address">地        址: </string>
+    <string name="Add_Illness_Age">年    龄: </string>
+    <string name="Add_Illness_Gender">性     别: </string>
+    <string name="Add_Illness_Content">病    情: </string>
+    <string name="Add_Illness_FetchLocation">获取当前位置</string>
+
+</resources>

@@ -28,7 +28,7 @@
             <!-- 好友名 -->
             <TextView
                 android:id="@+id/friend_name"
-                android:layout_width="200dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
 
                 android:textColor="@color/Black"
@@ -43,7 +43,7 @@
             <!-- 好友关系 -->
             <TextView
                 android:id="@+id/friend_relation"
-                android:layout_width="200dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
 
                 android:textColor="@color/Black"
@@ -58,7 +58,7 @@
             <!-- 好友手机号 -->
             <TextView
                 android:id="@+id/friend_phone"
-                android:layout_width="200dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
 
@@ -67,8 +67,25 @@
                 android:layout_marginBottom="10dp"
 
                 app:layout_constraintTop_toBottomOf="@id/friend_relation"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <!-- 关联状态 -->
+            <TextView
+                android:id="@+id/friend_isClose"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/xui_config_color_red"
+                android:textSize="@dimen/TextView_Size"
+
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp"
+
+                app:layout_constraintTop_toBottomOf="@id/friend_phone"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
 
             <!-- 删除选项 -->
             <ImageView
@@ -88,7 +105,7 @@
             <!-- 申请成为关联好友 -->
             <com.xuexiang.xui.widget.textview.supertextview.SuperButton
                 android:id="@+id/friend_close"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
 
                 android:layout_marginEnd="10dp"

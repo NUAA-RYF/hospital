@@ -75,9 +75,11 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         holder.mPhone.setText(friend.getPhone());
 
         if (friend.isClose()) {
-            holder.mClose.setText("申请关联");
-        } else {
             holder.mClose.setText("解除关联");
+            holder.mIsClose.setText("已关联");
+        } else {
+            holder.mClose.setText("申请关联");
+            holder.mIsClose.setText("未关联");
         }
         //编辑好友信息
         holder.mEdit.setOnClickListener(view -> {
@@ -123,9 +125,9 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                 String address = HOSPITAL + FRIEND_DELETE + "?id=" + friend.getId();
                 deleteFriendById(address);
                 dialogInterface.dismiss();
-            }).setPositiveButton("取消", ((dialogInterface, i) -> dialogInterface.dismiss()))
+            }).setNegativeButton("取消", ((dialogInterface, i) -> dialogInterface.dismiss()))
                     .setTitle("是否删除?")
-                    .setMessage("是否删除 " + friend.getName() + "及其相关信息?")
+                    .setMessage("是否删除 " + friend.getName() + " 及其相关信息?")
                     .show();
         });
     }
@@ -149,6 +151,8 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         SuperButton mEdit;
         @BindView(R.id.friend_close)
         SuperButton mClose;
+        @BindView(R.id.friend_isClose)
+        TextView mIsClose;
 
         ViewHolder(View view) {
             super(view);
@@ -203,7 +207,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                     XToast.warning(mContext, "删除失败!").show();
                     break;
                 case UPDATE_SUCCESS:
-                    XToast.success(mContext, "申请成功!").show();
+                    XToast.success(mContext, "操作成功!").show();
                     //数据改变发送广播
                     mContext.sendBroadcast(mFriendChangeBroadcast);
                     break;

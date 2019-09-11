@@ -111,6 +111,8 @@ public class FriendFragment extends Fragment {
         //初始化控件
         initConstrols();
 
+        //查询好友
+        queryFriend();
         return rootView;
     }
 
@@ -133,8 +135,7 @@ public class FriendFragment extends Fragment {
         mFabAdd.setOnClickListener(view -> {
             Intent addInfo = new Intent(mContext, EditFriendActivity.class);
             addInfo.putExtra("handle", EditFriendActivity.ADD);
-            Bundle userBundle = new Bundle();
-            userBundle.putParcelable("user", mUser);
+            Bundle userBundle = Objects.requireNonNull(getActivity()).getIntent().getBundleExtra("user");
             addInfo.putExtra("user", userBundle);
             mFabMenu.collapse();
             startActivity(addInfo);

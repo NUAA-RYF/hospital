@@ -21,10 +21,10 @@ public class HttpUrl {
     /**
      * 好友信息操作
      */
-    public static final String FRIEND_QUERY_USERNAME = "/friend/";
-    public static final String FRIEND_QUERY_ID = "/friend/";
-    public static final String FRIEND_INSERT = "/friend/";
-    public static final String FRIEND_UPDATE = "/friend/";
-    public static final String FRIEND_UPDATE_CLOSE = "/friend/";
-    public static final String FRIEND_DELETE = "/friend/";
+    public static final String FRIEND_QUERY_USERNAME = "/friend/findFriendList";
+    public static final String FRIEND_QUERY_ID = "/friend/findFriend";
+    public static final String FRIEND_INSERT = "/friend/insertFriend/";
+    public static final String FRIEND_UPDATE = "/friend/updateFriend/";
+    public static final String FRIEND_UPDATE_CLOSE = "/friend/updateFriendClose";
+    public static final String FRIEND_DELETE = "/friend/deleteFriend";
 }

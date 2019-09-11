@@ -193,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
         //适配器和底部导航栏
         mViewPager.setAdapter(mAdapter);
+        mViewPager.setOffscreenPageLimit(2);
         mTabSegment.addTab(mTab_Home);
         mTabSegment.addTab(mTab_Message);
         mTabSegment.addTab(mTab_Me);
