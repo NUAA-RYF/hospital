@@ -22,4 +22,17 @@ public class HttpUtil extends OkHttpClient {
         }).start();
     }
 
+    /**
+     * 使用Post方式提交数据
+     * @param address     地址
+     * @param requestBody Post内容
+     * @param callback    响应
+     */
+    public static void doPostRequest(String address, RequestBody requestBody,okhttp3.Callback callback){
+        new Thread(()->{
+            OkHttpClient mClient = new OkHttpClient();
+            Request mRequest = new Request.Builder().url(address).post(requestBody).build();
+            mClient.newCall(mRequest).enqueue(callback);
+        }).start();
+    }
 }

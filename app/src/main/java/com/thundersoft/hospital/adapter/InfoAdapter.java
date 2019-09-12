@@ -37,6 +37,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.thundersoft.hospital.util.HttpUrl.DISEASE_DELETE;
@@ -122,9 +124,12 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
         });
     }
 
-    private void deleteDiseaseFromServer(String id){
-        String address = HOSPITAL + DISEASE_DELETE + "?id=" + id;
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
+    private void deleteDiseaseFromServer(String id) {
+        RequestBody formBody = new FormBody.Builder()
+                .add("id", id)
+                .build();
+        String address = HOSPITAL + DISEASE_DELETE;
+        HttpUtil.doPostRequest(address, formBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 //删除失败,请检查网络
@@ -137,31 +142,30 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String responseText = Objects.requireNonNull(response.body()).string();
                 boolean result = LoadJsonUtil.deleteInfo(responseText);
-                if (result){
+                Message message = new Message();
+                if (result) {
                     //删除成功
-                    Message message = new Message();
                     message.what = DELETE_SUCCESS;
-                    mHandler.sendMessage(message);
 
                     //发送数据改变广播
                     Intent intent = new Intent("com.thundersoft.hospital.broadcast.DATA_CHANGE");
                     mContext.sendBroadcast(intent);
-                }else {
+                } else {
                     //删除失败
-                    Message message = new Message();
                     message.what = DELETE_FAILED;
-                    mHandler.sendMessage(message);
                 }
+                mHandler.sendMessage(message);
             }
         });
     }
+
     @Override
     public int getItemCount() {
         return mDiseaseList.size();
     }
 
     static
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.info_illness_name)
         TextView mIllnessName;
         @BindView(R.id.info_menu)

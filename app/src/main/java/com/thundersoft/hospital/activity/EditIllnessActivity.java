@@ -47,6 +47,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.thundersoft.hospital.util.HttpUrl.DISEASE_INSERT;
@@ -90,8 +92,9 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
 
     private static final int LOCATION = 1;
     private static final int QUERY_SUCCESS = 2;
-    private static final int HANDLE_SUCCESS = 3;
-    private static final int HANDLE_FAILED = 4;
+    private static final int CONNECTED_FAILED = 3;
+    private static final int HANDLE_SUCCESS = 4;
+    private static final int HANDLE_FAILED = 5;
 
     public static final int ADD = 123;
     public static final int CHANGE = 234;
@@ -361,17 +364,20 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
      */
     private void saveDiseaseInfo(String disease) {
         String address;
-        if (handle == ADD){
-            address = HOSPITAL + DISEASE_INSERT + disease;
-        }else {
-            address = HOSPITAL + DISEASE_UPDATE + disease;
+        RequestBody formBody = new FormBody.Builder()
+                .add("disease", disease)
+                .build();
+        if (handle == ADD) {
+            address = HOSPITAL + DISEASE_INSERT;
+        } else {
+            address = HOSPITAL + DISEASE_UPDATE;
         }
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
+        HttpUtil.doPostRequest(address, formBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Toast warning = XToast.warning(mContext, "连接失败,请检查网络!");
-                warning.setGravity(Gravity.CENTER, 0, 0);
-                warning.show();
+                Message message = new Message();
+                message.what = CONNECTED_FAILED;
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -379,9 +385,9 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
                 String responseText = Objects.requireNonNull(response.body()).string();
                 boolean result = LoadJsonUtil.messageIsSuccess(responseText);
                 Message message = new Message();
-                if (result){
+                if (result) {
                     message.what = HANDLE_SUCCESS;
-                }else {
+                } else {
                     message.what = HANDLE_FAILED;
                 }
                 mHandler.sendMessage(message);
@@ -395,11 +401,16 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
      * @param id 疾病ID
      */
     private void queryDiseaseInfoById(String id) {
-        String address = HOSPITAL + DISEASE_QUERY_ID + "?id=" + id;
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
+        RequestBody formBody = new FormBody.Builder()
+                .add("id", id)
+                .build();
+        String address = HOSPITAL + DISEASE_QUERY_ID;
+        HttpUtil.doPostRequest(address, formBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Message message = new Message();
+                message.what = CONNECTED_FAILED;
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -449,12 +460,12 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
                     mEditAddress.setContentText(address);
                     break;
                 case HANDLE_SUCCESS:
-                    if (handle == ADD){
-                        info = XToast.success(mContext,"添加成功!");
-                    }else {
-                        info = XToast.success(mContext,"修改成功!");
+                    if (handle == ADD) {
+                        info = XToast.success(mContext, "添加成功!");
+                    } else {
+                        info = XToast.success(mContext, "修改成功!");
                     }
-                    info.setGravity(Gravity.CENTER,0,0);
+                    info.setGravity(Gravity.CENTER, 0, 0);
                     info.show();
                     //数据改变发送广播
                     Intent intent = new Intent("com.thundersoft.hospital.broadcast.DATA_CHANGE");
@@ -462,9 +473,12 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
                     finish();
                     break;
                 case HANDLE_FAILED:
-                    info = XToast.warning(mContext,"操作失败!");
-                    info.setGravity(Gravity.CENTER,0,0);
+                    info = XToast.warning(mContext, "操作失败!");
+                    info.setGravity(Gravity.CENTER, 0, 0);
                     info.show();
+                    break;
+                case CONNECTED_FAILED:
+                    XToast.warning(mContext, "连接失败,请检查网络!");
                     break;
             }
         }

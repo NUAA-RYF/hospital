@@ -42,6 +42,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.thundersoft.hospital.util.HttpUrl.DISEASE_QUERY_USERNAME;
@@ -97,15 +99,15 @@ public class InfoFragment extends Fragment {
             rootView = inflater.inflate(R.layout.fragment_info, container, false);
         }
         ButterKnife.bind(this, rootView);
-
+        //注册广播
+        registerDataChangeBroadCast();
         //初始化数据
         initData();
         //初始化控件
         initControls();
         //查询病情信息
         queryDiseaseInfo();
-        //注册广播
-        registerDataChangeBroadCast();
+
         return rootView;
     }
 
@@ -113,19 +115,19 @@ public class InfoFragment extends Fragment {
      * 注册广播
      * 数据变化监听
      */
-    private void registerDataChangeBroadCast(){
+    private void registerDataChangeBroadCast() {
         IntentFilter mIntentFilter = new IntentFilter();
         mIntentFilter.addAction("com.thundersoft.hospital.broadcast.DATA_CHANGE");
         mReceiver = new DataChangeReceiver();
-        mActivity.registerReceiver(mReceiver,mIntentFilter);
+        mActivity.registerReceiver(mReceiver, mIntentFilter);
     }
 
     /**
      * 注销广播
      * 数据变化监听
      */
-    private void unRegisterDataChangeBraodCast(){
-        if (mReceiver != null){
+    private void unRegisterDataChangeBraodCast() {
+        if (mReceiver != null) {
             mActivity.unregisterReceiver(mReceiver);
             mReceiver = null;
         }
@@ -160,7 +162,7 @@ public class InfoFragment extends Fragment {
         //添加按钮
         mFabAdd.setOnClickListener(view -> {
             Intent addInfo = new Intent(mContext, EditIllnessActivity.class);
-            addInfo.putExtra("handle",EditIllnessActivity.ADD);
+            addInfo.putExtra("handle", EditIllnessActivity.ADD);
             Bundle userBundle = new Bundle();
             userBundle.putParcelable("user", mUser);
             addInfo.putExtra("user", userBundle);
@@ -186,7 +188,7 @@ public class InfoFragment extends Fragment {
     /**
      * 数据改变监听
      */
-    class DataChangeReceiver extends BroadcastReceiver{
+    class DataChangeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             queryDiseaseInfo();
@@ -203,11 +205,14 @@ public class InfoFragment extends Fragment {
     /**
      * 从服务器查询疾病信息
      */
-    private void queryDiseaseInfoFromServer(){
+    private void queryDiseaseInfoFromServer() {
         //查询疾病信息
-        String address = HOSPITAL + DISEASE_QUERY_USERNAME + "?username=" + mUser.getUserName();
+        String address = HOSPITAL + DISEASE_QUERY_USERNAME;
+        RequestBody formBody = new FormBody.Builder()
+                .add("username", mUser.getUserName())
+                .build();
         //发出网络请求
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
+        HttpUtil.doPostRequest(address, formBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Message message = new Message();
@@ -220,9 +225,9 @@ public class InfoFragment extends Fragment {
                 String responseText = Objects.requireNonNull(response.body()).string();
                 List<Disease> currentList = LoadJsonUtil.getDiseaseList(responseText);
                 Message message = new Message();
-                if (currentList.size() <= 0){
+                if (currentList.size() <= 0) {
                     message.what = QUERY_FAILED;
-                }else {
+                } else {
                     mDiseaseList.addAll(currentList);
                     message.what = QUERY_SUCCESS;
                 }
@@ -232,10 +237,10 @@ public class InfoFragment extends Fragment {
     }
 
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case QUERY_SUCCESS:
                     mInfoAdapter.notifyDataSetChanged();
                     break;

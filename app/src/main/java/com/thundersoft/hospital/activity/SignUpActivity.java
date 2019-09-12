@@ -40,6 +40,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.thundersoft.hospital.util.HttpUrl.CLIENT_SIGN_UP;
@@ -128,54 +130,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 //打开注册加载提示框
                 showLoadingDialog();
                 //输入合法,向服务端提交数据
-                String address = HOSPITAL + CLIENT_SIGN_UP + "?username=" + account +
-                        "&password=" + password +
-                        "&phone=" + phone;
-                HttpUtil.sendOkHttpRequest(address, new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        //网络连接失败,向用户提示
-                        Message message = new Message();
-                        message.what = CONNECTED_FAILED;
-                        mHandler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        String responseText = Objects.requireNonNull(response.body()).string();
-                        Map<String, String> ret = LoadJsonUtil.signUpAndGetIDORMsg(responseText);
-
-                        //获取后台返回信息
-                        if (Objects.requireNonNull(ret.get("type")).equals("success")) {
-                            //注册成功,关闭注册加载提示框
-                            Message message = new Message();
-                            message.what = SIGN_UP_SUCCESS;
-                            mHandler.sendMessage(message);
-
-                            //保存用户
-                            int id = Integer.parseInt(Objects.requireNonNull(ret.get("id")));
-                            User user = new User(id, account, password, phone);
-                            user.save();
-
-                            //用户信息与意图绑定后进入意图
-                            Intent login = new Intent(mContext, MainActivity.class);
-                            Bundle userBundle = new Bundle();
-                            userBundle.putParcelable("user", user);
-                            login.putExtra("user", userBundle);
-                            startActivity(login);
-
-                            //结束活动
-                            mActivity.finish();
-                        } else {
-                            if (ret.get("msg") != null) {
-                                Message message = new Message();
-                                message.what = SIGN_UP_FAILED;
-                                message.obj = ret.get("msg");
-                                mHandler.sendMessage(message);
-                            }
-                        }
-                    }
-                });
+                signUpToServer(account,password,phone);
             } else {
                 //输入不合法
                 Toast warning = XToast.warning(this, Objects.requireNonNull(available.get("msg")));
@@ -185,6 +140,60 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    private void signUpToServer(String username,String password,String phone){
+        RequestBody formBody = new FormBody.Builder()
+                .add("username",username)
+                .add("password",password)
+                .add("phone",phone)
+                .build();
+        String address = HOSPITAL + CLIENT_SIGN_UP;
+
+        HttpUtil.doPostRequest(address,formBody, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                //网络连接失败,向用户提示
+                Message message = new Message();
+                message.what = CONNECTED_FAILED;
+                mHandler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String responseText = Objects.requireNonNull(response.body()).string();
+                Map<String, String> ret = LoadJsonUtil.signUpAndGetIDORMsg(responseText);
+
+                //获取后台返回信息
+                if (Objects.requireNonNull(ret.get("type")).equals("success")) {
+                    //注册成功,关闭注册加载提示框
+                    Message message = new Message();
+                    message.what = SIGN_UP_SUCCESS;
+                    mHandler.sendMessage(message);
+
+                    //保存用户
+                    int id = Integer.parseInt(Objects.requireNonNull(ret.get("id")));
+                    User user = new User(id, username, password, phone);
+                    user.save();
+
+                    //用户信息与意图绑定后进入意图
+                    Intent login = new Intent(mContext, MainActivity.class);
+                    Bundle userBundle = new Bundle();
+                    userBundle.putParcelable("user", user);
+                    login.putExtra("user", userBundle);
+                    startActivity(login);
+
+                    //结束活动
+                    mActivity.finish();
+                } else {
+                    if (ret.get("msg") != null) {
+                        Message message = new Message();
+                        message.what = SIGN_UP_FAILED;
+                        message.obj = ret.get("msg");
+                        mHandler.sendMessage(message);
+                    }
+                }
+            }
+        });
+    }
     /**
      * 输入是否合法
      *

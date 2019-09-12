@@ -40,6 +40,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.thundersoft.hospital.util.HttpUrl.*;
@@ -143,27 +145,32 @@ public class EditFriendActivity extends AppCompatActivity {
                 return;
             }
             String address;
+            RequestBody formBody;
+            Friend friend;
             if (handle == ADD) {
                 //添加操作
                 String username = mCurrentUser.getUserName();
-                Friend friend = new Friend(username, name, phone, relation);
-                address = HOSPITAL + FRIEND_INSERT + new Gson().toJson(friend);
+                friend = new Friend(username, name, phone, relation);
+                address = HOSPITAL + FRIEND_INSERT;
             } else {
                 //修改操作
-                Friend friend = new Friend(mFriend.getId(), mFriend.getUsername(), name, phone, relation, mFriend.isClose());
-                address = HOSPITAL + FRIEND_UPDATE + new Gson().toJson(friend);
+                friend = new Friend(mFriend.getId(), mFriend.getUsername(), name, phone, relation, mFriend.isClose());
+                address = HOSPITAL + FRIEND_UPDATE;
             }
-            editFriendInfoToServer(address);
+            formBody = new FormBody.Builder()
+                    .add("friendJson", new Gson().toJson(friend))
+                    .build();
+            editFriendInfoToServer(address, formBody);
         });
     }
 
     /**
      * 将好友信息提交至服务器
-     *
+     * Post方式
      * @param address 地址
      */
-    private void editFriendInfoToServer(String address) {
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
+    private void editFriendInfoToServer(String address, RequestBody formBody) {
+        HttpUtil.doPostRequest(address, formBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Message message = new Message();
@@ -201,7 +208,7 @@ public class EditFriendActivity extends AppCompatActivity {
             ret.put("msg", "姓名不得为空!");
             return ret;
         }
-        if (name.length() >= 10){
+        if (name.length() >= 10) {
             ret.put("type", "error");
             ret.put("msg", "姓名不得多余10个字!");
             return ret;
@@ -211,7 +218,7 @@ public class EditFriendActivity extends AppCompatActivity {
             ret.put("msg", "关系不得为空!");
             return ret;
         }
-        if (relation.length() >= 6){
+        if (relation.length() >= 6) {
             ret.put("type", "error");
             ret.put("msg", "关系不得多于5个字!");
             return ret;
@@ -254,9 +261,18 @@ public class EditFriendActivity extends AppCompatActivity {
         ActivityController.removeActivity(this);
     }
 
+    /**
+     * 按ID查找好友信息
+     * Post方式
+     *
+     * @param id ID
+     */
     private void queryFriendById(int id) {
-        String address = HOSPITAL + FRIEND_QUERY_ID + "?id=" + id;
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
+        RequestBody formBody = new FormBody.Builder()
+                .add("id", String.valueOf(id))
+                .build();
+        String address = HOSPITAL + FRIEND_QUERY_ID;
+        HttpUtil.doPostRequest(address, formBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Message message = new Message();
@@ -297,10 +313,10 @@ public class EditFriendActivity extends AppCompatActivity {
                 case SUBMIT_FAILED:
                     break;
                 case SUBMIT_SUCCESS:
-                    if (handle == ADD){
-                        XToast.success(mContext,"添加成功!").show();
-                    }else {
-                        XToast.success(mContext,"修改成功!").show();
+                    if (handle == ADD) {
+                        XToast.success(mContext, "添加成功!").show();
+                    } else {
+                        XToast.success(mContext, "修改成功!").show();
                     }
                     //数据改变发送广播
                     Intent mFriendChangeBroadcast = new Intent("com.thundersoft.hospital.broadcast.FRIEND_CHANGE");

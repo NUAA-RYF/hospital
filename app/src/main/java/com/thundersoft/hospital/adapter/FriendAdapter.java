@@ -33,6 +33,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.thundersoft.hospital.util.HttpUrl.FRIEND_DELETE;
@@ -98,8 +100,14 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                 mBuilder.setTitle("是否解除与" + friend.getName() + "的关联?")
                         .setMessage("取消成功后,使用一键急救将无法通知到" + friend.getPhone() + "。是否解除?")
                         .setPositiveButton("解除关联", (dialogInterface, i) -> {
-                            String address = HOSPITAL + FRIEND_UPDATE_CLOSE + "?id=" + friend.getId() + "&close=" + false;
-                            updateCloseById(address);
+
+                            //向服务器发起请求
+                            RequestBody formBody = new FormBody.Builder()
+                                    .add("id", String.valueOf(friend.getId()))
+                                    .add("close", "0")
+                                    .build();
+                            String address = HOSPITAL + FRIEND_UPDATE_CLOSE;
+                            updateCloseById(address, formBody);
                         })
                         .setNegativeButton("取消操作", ((dialogInterface, i) -> dialogInterface.dismiss()))
                         .show();
@@ -109,8 +117,13 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                 mBuilder.setTitle("是否申请与" + friend.getName() + "的关联?")
                         .setMessage("申请成功后,使用一键急救将可以将通知发送到" + friend.getPhone() + "。是否关联?")
                         .setPositiveButton("申请关联", (dialogInterface, i) -> {
-                            String address = HOSPITAL + FRIEND_UPDATE_CLOSE + "?id=" + friend.getId() + "&close=" + true;
-                            updateCloseById(address);
+                            //向服务器发起请求
+                            RequestBody formBody = new FormBody.Builder()
+                                    .add("id", String.valueOf(friend.getId()))
+                                    .add("close", "1")
+                                    .build();
+                            String address = HOSPITAL + FRIEND_UPDATE_CLOSE;
+                            updateCloseById(address, formBody);
                         })
                         .setNegativeButton("取消操作", ((dialogInterface, i) -> dialogInterface.dismiss()))
                         .show();
@@ -121,9 +134,12 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         holder.mDelete.setOnClickListener(view -> {
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(mContext);
             mBuilder.setPositiveButton("删除", (dialogInterface, i) -> {
-                //删除信息
-                String address = HOSPITAL + FRIEND_DELETE + "?id=" + friend.getId();
-                deleteFriendById(address);
+                //删除信息,向服务器发起请求
+                RequestBody formBody = new FormBody.Builder()
+                        .add("id", String.valueOf(friend.getId()))
+                        .build();
+                String address = HOSPITAL + FRIEND_DELETE;
+                deleteFriendById(address, formBody);
                 dialogInterface.dismiss();
             }).setNegativeButton("取消", ((dialogInterface, i) -> dialogInterface.dismiss()))
                     .setTitle("是否删除?")
@@ -165,8 +181,8 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
      *
      * @param address 地址
      */
-    private void deleteFriendById(String address) {
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
+    private void deleteFriendById(String address, RequestBody formBody) {
+        HttpUtil.doPostRequest(address, formBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Message message = new Message();
@@ -223,8 +239,8 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
      *
      * @param address 地址
      */
-    private void updateCloseById(String address) {
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
+    private void updateCloseById(String address, RequestBody formBody) {
+        HttpUtil.doPostRequest(address, formBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Message message = new Message();

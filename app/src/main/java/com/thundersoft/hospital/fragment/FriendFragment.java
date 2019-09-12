@@ -33,6 +33,7 @@ import com.thundersoft.hospital.util.LoadJsonUtil;
 import com.xuexiang.xui.widget.toast.XToast;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +44,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.BufferedSink;
 
 import static com.thundersoft.hospital.util.HttpUrl.FRIEND_QUERY_USERNAME;
 import static com.thundersoft.hospital.util.HttpUrl.HOSPITAL;
@@ -164,10 +169,14 @@ public class FriendFragment extends Fragment {
 
     /**
      * 从服务器端查询好友信息
+     * Post方式
      */
     private void queryFriendInfoFromServer() {
-        String address = HOSPITAL + FRIEND_QUERY_USERNAME + "?username=" + mUser.getUserName();
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
+        RequestBody formBody = new FormBody.Builder()
+                .add("username",mUser.getUserName())
+                .build();
+        String address = HOSPITAL + FRIEND_QUERY_USERNAME;
+        HttpUtil.doPostRequest(address,formBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 //发送失败

@@ -41,6 +41,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.thundersoft.hospital.util.HttpUrl.CLIENT_ACCOUNT_LOGIN;
@@ -131,63 +133,17 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
                 Map<String, String> available = isInputAvailable(account, password);
                 if (Objects.requireNonNull(available.get("type")).equals("success")) {
                     //从数据库获取数据
-                    String address = HOSPITAL +
-                            CLIENT_ACCOUNT_LOGIN +
-                            "?username=" + account +
-                            "&password=" + password;
-
-                    HttpUtil.sendOkHttpRequest(address, new Callback() {
-                        @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            Message message = new Message();
-                            message.what = LOGIN_FAILED;
-                            mHandler.sendMessage(message);
-                        }
-
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                            String responseText = Objects.requireNonNull(response.body()).string();
-                            Map<String,String> ret = LoadJsonUtil.getUser(responseText);
-                            if (ret == null){
-                                Message message = new Message();
-                                message.what = LOGIN_FAILED;
-                                mHandler.sendMessage(message);
-                                return;
-                            }
-                            String type = ret.get("type");
-
-                            if(Objects.requireNonNull(type).equals("success")){
-                                //获得用户信息
-                                int id = Integer.parseInt(Objects.requireNonNull(ret.get("id")));
-                                String username = ret.get("username");
-                                String password = ret.get("password");
-                                String phone = ret.get("phone");
-                                User user = new User(id,username,password,phone);
-                                user.save();
-
-                                //将用户信息和意图捆绑
-                                Intent loginIntent = new Intent(mContext, MainActivity.class);
-                                Bundle userBundle = new Bundle();
-                                userBundle.putParcelable("user", user);
-                                loginIntent.putExtra("user", userBundle);
-                                startActivity(loginIntent);
-                                mActivity.finish();
-                            }else {
-                                String msg = ret.get("msg");
-                                Message message = new Message();
-                                message.what = LOGIN_ERROR_MESSAGE;
-                                message.obj = msg;
-                                mHandler.sendMessage(message);
-                            }
-
-                        }
-                    });
+                    RequestBody formBody = new FormBody.Builder()
+                            .add("username",account)
+                            .add("password",password)
+                            .build();
+                    String address = HOSPITAL + CLIENT_ACCOUNT_LOGIN;
+                    loginFromServer(address,formBody);
                 } else {
                     Toast warning = XToast.warning(this, Objects.requireNonNull(available.get("msg")));
                     warning.setGravity(Gravity.CENTER, 0, 0);
                     warning.show();
                 }
-
                 break;
             case R.id.account_login_signUp:
                 Intent signUp = new Intent(this, SignUpActivity.class);
@@ -199,6 +155,59 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
                 break;
 
         }
+    }
+
+    /**
+     * 向服务器申请登录
+     * @param address  地址
+     * @param formBody 请求参数
+     */
+    private void loginFromServer(String address, RequestBody formBody){
+        HttpUtil.doPostRequest(address, formBody,new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = new Message();
+                        message.what = LOGIN_FAILED;
+                        mHandler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String responseText = Objects.requireNonNull(response.body()).string();
+                        Map<String,String> ret = LoadJsonUtil.getUser(responseText);
+                        if (ret == null){
+                            Message message = new Message();
+                            message.what = LOGIN_FAILED;
+                            mHandler.sendMessage(message);
+                            return;
+                        }
+                        String type = ret.get("type");
+
+                        if(Objects.requireNonNull(type).equals("success")){
+                            //获得用户信息
+                            int id = Integer.parseInt(Objects.requireNonNull(ret.get("id")));
+                            String username = ret.get("username");
+                            String password = ret.get("password");
+                            String phone = ret.get("phone");
+                            User user = new User(id,username,password,phone);
+                            user.save();
+
+                            //将用户信息和意图捆绑
+                            Intent loginIntent = new Intent(mContext, MainActivity.class);
+                            Bundle userBundle = new Bundle();
+                            userBundle.putParcelable("user", user);
+                            loginIntent.putExtra("user", userBundle);
+                            startActivity(loginIntent);
+                            mActivity.finish();
+                        }else {
+                            String msg = ret.get("msg");
+                            Message message = new Message();
+                            message.what = LOGIN_ERROR_MESSAGE;
+                            message.obj = msg;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+        });
     }
 
     /**
