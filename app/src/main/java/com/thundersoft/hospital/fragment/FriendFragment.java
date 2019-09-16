@@ -106,7 +106,6 @@ public class FriendFragment extends Fragment {
         }
         ButterKnife.bind(this, rootView);
 
-
         //注册广播监听
         registerFriendChangeBroadCast();
 

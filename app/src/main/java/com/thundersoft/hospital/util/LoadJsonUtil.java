@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.thundersoft.hospital.model.BMI;
 import com.thundersoft.hospital.model.Constellation;
 import com.thundersoft.hospital.model.Disease;
+import com.thundersoft.hospital.model.FirstAid;
 import com.thundersoft.hospital.model.Friend;
 import com.thundersoft.hospital.model.GenderMonth;
 import com.thundersoft.hospital.model.JieQi;
@@ -397,5 +398,30 @@ public class LoadJsonUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * 获取急救信息列表
+     * @param response 急救信息
+     * @return         返回列表
+     */
+    public static List<FirstAid> getFirstAidList(String response){
+        List<FirstAid> mFirstAidList = new ArrayList<>();
+        if (!TextUtils.isEmpty(response)){
+            try {
+                JSONObject msgAll = new JSONObject(response);
+                if (msgAll.getString("type").equals("success")){
+                    JSONArray result = msgAll.getJSONArray("result");
+                    for (int i = 0; i < result.length(); i++) {
+                        FirstAid firstAid = new Gson().fromJson(result.getString(i),FirstAid.class);
+                        mFirstAidList.add(firstAid);
+                    }
+                    return mFirstAidList;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return mFirstAidList;
     }
 }

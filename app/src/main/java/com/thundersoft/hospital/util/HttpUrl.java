@@ -26,4 +26,12 @@ public class HttpUrl {
     public static final String FRIEND_UPDATE = "/friend/updateFriend";
     public static final String FRIEND_UPDATE_CLOSE = "/friend/updateFriendClose";
     public static final String FRIEND_DELETE = "/friend/deleteFriend";
+
+    /**
+     * 急救信息操作
+     */
+    public static final String FIRST_AID_QUERY_USERNAME = "/firstAid/findFirstAidList";
+    public static final String FIRST_AID_INSERT = "/firstAid/insertFirstAid";
+    public static final String FIRST_AID_DELETE = "/firstAid/deleteFirstAid";
+
 }

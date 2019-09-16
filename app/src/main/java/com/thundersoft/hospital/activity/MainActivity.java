@@ -24,6 +24,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.navigation.NavigationView;
 import com.thundersoft.hospital.R;
 import com.thundersoft.hospital.adapter.PagerAdapter;
+import com.thundersoft.hospital.fragment.FirstAidFragment;
 import com.thundersoft.hospital.fragment.HomeFragment;
 import com.thundersoft.hospital.fragment.InfoFragment;
 import com.thundersoft.hospital.fragment.FriendFragment;
@@ -57,8 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
     private PagerAdapter mAdapter;
     private TabSegment.Tab mTab_Home;
+    private TabSegment.Tab mTab_FirstAid;
+    private TabSegment.Tab mTab_Friend;
     private TabSegment.Tab mTab_Message;
-    private TabSegment.Tab mTab_Me;
     private long mExitTimes;
 
     private User mCurrentUser;
@@ -91,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
         mFragmentList.add(HomeFragment.newInstance());
         mFragmentList.add(InfoFragment.newInstance());
         mFragmentList.add(FriendFragment.newInstance());
+        mFragmentList.add(FirstAidFragment.newInstance());
+
         mAdapter = new PagerAdapter(getSupportFragmentManager(), mFragmentList);
 
         mTab_Home = new TabSegment.Tab(
@@ -99,16 +103,22 @@ public class MainActivity extends AppCompatActivity {
                 "首页", true
         );
 
+        mTab_FirstAid = new TabSegment.Tab(
+                ContextCompat.getDrawable(this, R.mipmap.icon_aid),
+                null,
+                "急救", true
+        );
+
+        mTab_Friend = new TabSegment.Tab(
+                ContextCompat.getDrawable(this, R.mipmap.icon_personal),
+                null,
+                "关联", true
+        );
+
         mTab_Message = new TabSegment.Tab(
                 ContextCompat.getDrawable(this, R.mipmap.icon_message),
                 null,
-                "消息", true
-        );
-
-        mTab_Me = new TabSegment.Tab(
-                ContextCompat.getDrawable(this, R.mipmap.icon_personal),
-                null,
-                "好友", true
+                "信息", true
         );
     }
 
@@ -193,10 +203,11 @@ public class MainActivity extends AppCompatActivity {
 
         //适配器和底部导航栏
         mViewPager.setAdapter(mAdapter);
-        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(3);
         mTabSegment.addTab(mTab_Home);
+        mTabSegment.addTab(mTab_FirstAid);
+        mTabSegment.addTab(mTab_Friend);
         mTabSegment.addTab(mTab_Message);
-        mTabSegment.addTab(mTab_Me);
         mTabSegment.setupWithViewPager(mViewPager, false, true);
     }
 
