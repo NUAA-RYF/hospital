@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -423,5 +424,26 @@ public class LoadJsonUtil {
             }
         }
         return mFirstAidList;
+    }
+
+    public static Map<String,String> getMessageResponse(String response){
+        Map<String,String> ret = new HashMap<>();
+        if (!TextUtils.isEmpty(response)){
+            try {
+                JSONObject msgAll = new JSONObject(response);
+                if (msgAll.getString("type").equals("success")){
+                    ret.put("type","success");
+                    return ret;
+                }
+                ret.put("type","error");
+                ret.put("msg",msgAll.getString("msg"));
+                return ret;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        ret.put("type","error");
+        ret.put("msg","返回信息为空!");
+        return ret;
     }
 }

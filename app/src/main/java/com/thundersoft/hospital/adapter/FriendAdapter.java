@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -228,7 +229,8 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                     mContext.sendBroadcast(mFriendChangeBroadcast);
                     break;
                 case UPDATE_FAILED:
-                    XToast.warning(mContext, "申请失败!").show();
+                    String failedMessage = String.valueOf(msg.obj);
+                    XToast.warning(mContext, failedMessage).show();
                     break;
             }
         }
@@ -251,12 +253,13 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String responseText = Objects.requireNonNull(response.body()).string();
-                boolean result = LoadJsonUtil.messageIsSuccess(responseText);
+                Map<String, String> messageResponse = LoadJsonUtil.getMessageResponse(responseText);
 
                 Message message = new Message();
-                if (result) {
+                if (Objects.requireNonNull(messageResponse.get("type")).equals("success")) {
                     message.what = UPDATE_SUCCESS;
                 } else {
+                    message.obj = messageResponse.get("msg");
                     message.what = UPDATE_FAILED;
                 }
                 mHandler.sendMessage(message);
