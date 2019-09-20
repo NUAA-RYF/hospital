@@ -2,6 +2,7 @@ package com.thundersoft.hospital.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -73,6 +74,8 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
 
     private Activity mActivity;
 
+    private ProgressDialog mDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +123,6 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
      * 账号登录
      * 注册
      * 手机登录
-     *
      * @param view 视图
      */
     @Override
@@ -139,6 +141,7 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
                             .build();
                     String address = HOSPITAL + CLIENT_ACCOUNT_LOGIN;
                     loginFromServer(address,formBody);
+                    openProgressDialog();
                 } else {
                     Toast warning = XToast.warning(this, Objects.requireNonNull(available.get("msg")));
                     warning.setGravity(Gravity.CENTER, 0, 0);
@@ -242,6 +245,7 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
+            closeProgressDialog();
             switch (msg.what) {
                 case LOGIN_FAILED:
                     Toast warning = XToast.warning(mContext, "登录失败,请检查网络!");
@@ -286,6 +290,26 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
             loginIntent.putExtra("user", userBundle);
             startActivity(loginIntent);
             mActivity.finish();
+        }
+    }
+
+    /**
+     * 打开提示框
+     */
+    private void openProgressDialog(){
+        if (mDialog == null){
+            mDialog = new ProgressDialog(mContext);
+            mDialog.setMessage("正在登录...");
+            mDialog.show();
+        }
+    }
+
+    /**
+     * 关闭提示框
+     */
+    private void closeProgressDialog(){
+        if (mDialog != null){
+            mDialog.dismiss();
         }
     }
 }
