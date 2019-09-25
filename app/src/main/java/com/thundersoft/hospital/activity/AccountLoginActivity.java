@@ -156,7 +156,6 @@ public class AccountLoginActivity extends AppCompatActivity implements View.OnCl
                 Intent phoneLogin = new Intent(this,PhoneLoginActivity.class);
                 startActivity(phoneLogin);
                 break;
-
         }
     }
 

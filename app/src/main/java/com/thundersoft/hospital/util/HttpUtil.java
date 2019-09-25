@@ -47,33 +47,4 @@ public class HttpUtil extends OkHttpClient {
             mClient.newCall(mRequest).enqueue(callback);
         }).start();
     }
-
-    public static void webSocket(String id){
-        String address = HOSPITAL + id;
-        OkHttpClient mClient = new OkHttpClient();
-        Request request = new Request.Builder().url(address).build();
-        mClient.newWebSocket(request, new WebSocketListener() {
-            @Override
-            public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-                super.onClosed(webSocket, code, reason);
-            }
-
-            @Override
-            public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
-                Log.e(TAG, "onFailure: 与服务器建立长连接失败!");
-                super.onFailure(webSocket, t, response);
-            }
-
-            @Override
-            public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
-
-                super.onMessage(webSocket, text);
-            }
-
-            @Override
-            public void onOpen(@NotNull WebSocket webSocket, @NotNull Response response) {
-                super.onOpen(webSocket, response);
-            }
-        });
-    }
 }

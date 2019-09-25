@@ -159,16 +159,20 @@ public class InfoFragment extends Fragment {
      * 适配器及其布局初始化
      */
     private void initControls() {
+
         //添加按钮
         mFabAdd.setOnClickListener(view -> {
+            //用户信息和操作形式绑定意图
             Intent addInfo = new Intent(mContext, EditIllnessActivity.class);
             addInfo.putExtra("handle", EditIllnessActivity.ADD);
             Bundle userBundle = new Bundle();
             userBundle.putParcelable("user", mUser);
             addInfo.putExtra("user", userBundle);
+
             mFabMenu.collapse();
             startActivity(addInfo);
         });
+
         //刷新按钮
         mFabRefresh.setOnClickListener(view -> {
             queryDiseaseInfo();
@@ -236,12 +240,16 @@ public class InfoFragment extends Fragment {
         });
     }
 
+    /**
+     * 交于handler处理UI控件
+     */
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case QUERY_SUCCESS:
+                    //查询成功,修改视图
                     mInfoAdapter.notifyDataSetChanged();
                     break;
                 case QUERY_FAILED:

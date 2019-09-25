@@ -69,7 +69,15 @@ public class FirstAidAdapter extends RecyclerView.Adapter<FirstAidAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FirstAid mFirstAid = mFirstAidList.get(position);
         holder.mDiseaseName.setText(mFirstAid.getDiseaseName());
-        holder.mHandle.setText("等待处理");
+        if (mFirstAid.getState() == 0){
+            holder.mHandle.setText("等待处理");
+        }
+        if (mFirstAid.getState() == 1){
+            holder.mHandle.setText("正在处理");
+        }
+        if (mFirstAid.getState() == 2){
+            holder.mHandle.setText("处理结束");
+        }
 
         holder.mDelete.setOnClickListener(view -> {
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(mContext);

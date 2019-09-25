@@ -11,11 +11,14 @@ public class FirstAid {
     private String diseaseName;
     private String diseaseInfo;
     private String currentAddress;
+    private double latitude;
+    private double longitude;
     private int state;
 
     public FirstAid(String username, String name, String age,
                     String phone, String gender, String address,
-                    String diseaseName, String diseaseInfo, String currentAddress) {
+                    String diseaseName, String diseaseInfo,
+                    String currentAddress, double latitude, double longitude) {
         this.username = username;
         this.name = name;
         this.age = age;
@@ -25,7 +28,25 @@ public class FirstAid {
         this.diseaseName = diseaseName;
         this.diseaseInfo = diseaseInfo;
         this.currentAddress = currentAddress;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.state = 0;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public int getState() {

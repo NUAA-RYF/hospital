@@ -29,6 +29,7 @@ import com.thundersoft.hospital.fragment.HomeFragment;
 import com.thundersoft.hospital.fragment.InfoFragment;
 import com.thundersoft.hospital.fragment.FriendFragment;
 import com.thundersoft.hospital.model.User;
+import com.thundersoft.hospital.util.FirstAidService;
 import com.xuexiang.xui.utils.StatusBarUtils;
 import com.xuexiang.xui.widget.tabbar.TabSegment;
 import com.xuexiang.xui.widget.toast.XToast;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private TabSegment.Tab mTab_Friend;
     private TabSegment.Tab mTab_Message;
     private long mExitTimes;
-
+    private FirstAidService firstAidService;
     private User mCurrentUser;
 
     @Override
@@ -268,12 +269,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 从意图中获取用户信息
+     * 从意图中获取用户信息并开启服务
      */
     private void getUserInfoFromIntent(){
         Bundle userBundle = getIntent().getBundleExtra("user");
         if (userBundle != null) {
             mCurrentUser = (User) userBundle.get("user");
+            //开启服务
+            /*Intent intent = new Intent(this,FirstAidService.class);
+            intent.putExtra("user",userBundle);
+            startService(intent);*/
         }else {
             Log.e(TAG, "getUserInfoFromIntent: 用户信息为空!");
         }

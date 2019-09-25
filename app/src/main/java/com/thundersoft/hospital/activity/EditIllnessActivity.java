@@ -119,13 +119,15 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
 
 
     /**
-     * 初始化输出
+     * 初始化数据
      * 下拉框
      * 编辑操作初始化控件
      */
     private void initData() {
         mContext = this;
         mActivity = this;
+        mExitTimes = System.currentTimeMillis();
+
         //控件绑定视图
         ButterKnife.bind(this);
         ActivityController.addActivity(this);
@@ -134,7 +136,6 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
         Intent mIntent = getIntent();
         handle = mIntent.getIntExtra("handle", 0);
         int infoId = mIntent.getIntExtra("illnessId", 0);
-        mExitTimes = System.currentTimeMillis();
 
         //初始化下拉框
         List<String> genderList = new ArrayList<>();
@@ -222,8 +223,8 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
                 aMapLocationClient.startLocation();
                 break;
             case R.id.add_illness_submit:
-                //判断用户是否登录
                 String disease;
+
                 //提交保存信息
                 String name = String.valueOf(mEditUserName.getText());
                 String phone = String.valueOf(mEditPhone.getText());
@@ -232,9 +233,9 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
                 String address = mEditAddress.getContentText();
                 String diseaseName = String.valueOf(mEditName.getText());
                 String diseaseInfo = mEditContent.getContentText();
-
                 //是否合法
-                Map<String, String> available = isInputAvailable(diseaseName, name, phone, age, gender, address, diseaseInfo);
+                Map<String, String> available = isInputAvailable(diseaseName, name, phone,
+                        age, gender, address, diseaseInfo);
 
                 if (Objects.requireNonNull(available.get("type")).equals("success")) {
                     //添加信息操作
@@ -324,7 +325,12 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
             ret.put("msg", "请填写11位手机号码!");
             return ret;
         } else {
-            for (int i = 0; i < phone.length(); i++) {
+            if (phone.length() != 11) {
+                ret.put("type", "error");
+                ret.put("msg", "手机号码为11位!");
+                return ret;
+            }
+            for (int i = 0; i < 11; i++) {
                 char word = phone.charAt(i);
                 if (word > '9' || word < '0') {
                     ret.put("type", "error");
@@ -332,12 +338,8 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
                     return ret;
                 }
             }
-            if (phone.length() != 11) {
-                ret.put("type", "error");
-                ret.put("msg", "手机号码为11位!");
-                return ret;
-            }
         }
+
         if (age.equals("")) {
             ret.put("type", "error");
             ret.put("msg", "请填写年龄!");
@@ -356,7 +358,6 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
         return ret;
     }
 
-
     /**
      * 添加或修改疾病信息
      *
@@ -364,14 +365,17 @@ public class EditIllnessActivity extends AppCompatActivity implements View.OnCli
      */
     private void saveDiseaseInfo(String disease) {
         String address;
+        //以POST方式请求时，body携带的请求参数
         RequestBody formBody = new FormBody.Builder()
                 .add("disease", disease)
                 .build();
+        //添加操作OR更新操作
         if (handle == ADD) {
             address = HOSPITAL + DISEASE_INSERT;
         } else {
             address = HOSPITAL + DISEASE_UPDATE;
         }
+        //向服务器端以POST方式发出网络请求
         HttpUtil.doPostRequest(address, formBody, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {

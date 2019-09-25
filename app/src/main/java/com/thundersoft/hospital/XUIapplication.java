@@ -12,4 +12,9 @@ public class XUIapplication extends LitePalApplication {
         XUI.debug(true);
         super.onCreate();
     }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+    }
 }

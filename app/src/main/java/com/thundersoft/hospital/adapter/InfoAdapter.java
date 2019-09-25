@@ -36,7 +36,9 @@ import com.xuexiang.xui.widget.toast.XToast;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -63,9 +65,17 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
 
     private static final int INSERT_SUCCESS = 4;
 
+    private static final int FIRST_AID = 5;
+
     private List<Disease> mDiseaseList;
 
     private Context mContext;
+
+    private String address;
+
+    private double latitude;
+    private double longitude;
+    private FirstAid mFirstAid;
 
     public InfoAdapter(List<Disease> diseaseList) {
         mDiseaseList = diseaseList;
@@ -132,17 +142,13 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
                     .setMessage("正在使用"+mInfo.getDiseaseName()+"请求一键急救!")
                     .setNegativeButton("取消",(dialogInterface, i) -> dialogInterface.dismiss())
                     .setPositiveButton("发出请求",(dialogInterface, i) -> {
-                        //将信息传递到服务器后台和关联好友手机号
-                        String currentAddress = getCurrentAddress();
-                        FirstAid firstAid = new FirstAid(mInfo.getUsername(), mInfo.getName(),
+                        //获取当前位置,经纬度
+                        mFirstAid = new FirstAid(mInfo.getUsername(), mInfo.getName(),
                                 mInfo.getAge(), mInfo.getPhone(), mInfo.getGender(), mInfo.getAddress(),
-                                mInfo.getDiseaseName(), mInfo.getDiseaseInfo(), currentAddress);
-                        String json = new Gson().toJson(firstAid);
-                        RequestBody formBody = new FormBody.Builder()
-                                .add("firstAidJson",json)
-                                .build();
-                        String address = HOSPITAL + FIRST_AID_INSERT;
-                        insertFirstAidToServer(address,formBody);
+                                mInfo.getDiseaseName(), mInfo.getDiseaseInfo(), address,latitude,longitude);
+                        //将信息传递到服务器后台和关联好友手机号
+                        getCurrentAddress(mFirstAid);
+
                     }).show();
         });
     }
@@ -246,16 +252,33 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
                     mContext.sendBroadcast(mFriendChangeBroadcast);
                     XToast.success(mContext,"申请成功!").show();
                     break;
+                case FIRST_AID:
+                    Map<String,Object> ret = (Map<String, Object>) msg.obj;
+                    address = String.valueOf(ret.get("currentAddress"));
+                    latitude = (double) ret.get("latitude");
+                    longitude = (double) ret.get("longitude");
+                    mFirstAid = (FirstAid) ret.get("firstAid");
+                    if (mFirstAid != null) {
+                        mFirstAid.setCurrentAddress(address);
+                        mFirstAid.setLatitude(latitude);
+                        mFirstAid.setLongitude(longitude);
+                    }
+                    //转化为JSON数组
+                    String json = new Gson().toJson(mFirstAid);
+                    RequestBody formBody = new FormBody.Builder()
+                            .add("firstAidJson",json)
+                            .build();
+                    String address = HOSPITAL + FIRST_AID_INSERT;
+                    insertFirstAidToServer(address,formBody);
+                    break;
             }
         }
     };
 
     /**
-     * 获取当前地理位置信息
-     * @return 返回地理位置
+     * 获取当前地理位置信息和经纬度
      */
-    private String getCurrentAddress() {
-        final String[] currentAddress = {null};
+    private void getCurrentAddress(FirstAid firstAid) {
         //获取当前位置
         //定位客户端
         AMapLocationClient aMapLocationClient = new AMapLocationClient(mContext);
@@ -273,8 +296,21 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
         AMapLocationListener aMapLocationListener = aMapLocation -> {
             if (aMapLocation != null) {
                 if (aMapLocation.getErrorCode() == 0) {
-                    //可在其中解析amapLocation获取相应内容。
-                    currentAddress[0] = aMapLocation.getAddress();
+                    //可在其中解析amapLocation获取相应内容
+                    //获取当前位置和经纬度
+                    Map<String,Object> ret = new HashMap<>();
+                    double latitude = aMapLocation.getLatitude();
+                    double longitude = aMapLocation.getLongitude();
+                    String currentAddress = aMapLocation.getAddress();
+                    ret.put("currentAddress",currentAddress);
+                    ret.put("latitude",latitude);
+                    ret.put("longitude",longitude);
+                    ret.put("firstAid",firstAid);
+                    //在Handler中处理
+                    Message message = new Message();
+                    message.what = FIRST_AID;
+                    message.obj = ret;
+                    mHandler.sendMessage(message);
                     aMapLocationClient.stopLocation();
                 } else {
                     //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
@@ -287,7 +323,6 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
         aMapLocationClient.setLocationOption(aMapLocationClientOption);
         aMapLocationClient.setLocationListener(aMapLocationListener);
         aMapLocationClient.startLocation();
-        return currentAddress[0];
     }
 
     private void insertFirstAidToServer(String address,RequestBody formBody){

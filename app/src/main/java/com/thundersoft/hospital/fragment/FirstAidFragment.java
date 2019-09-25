@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.thundersoft.hospital.R;
 import com.thundersoft.hospital.adapter.FirstAidAdapter;
 import com.thundersoft.hospital.model.FirstAid;
@@ -52,6 +54,10 @@ public class FirstAidFragment extends Fragment {
 
     @BindView(R.id.first_recyclerView)
     RecyclerView mRecyclerView;
+    @BindView(R.id.aid_fab_refresh)
+    FloatingActionButton mFabRefresh;
+    @BindView(R.id.aid_fab_menu)
+    FloatingActionsMenu mFabMenu;
 
     private View rootView;
 
@@ -87,7 +93,7 @@ public class FirstAidFragment extends Fragment {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_first_aid, container, false);
         }
-        ButterKnife.bind(this,rootView);
+        ButterKnife.bind(this, rootView);
 
         //注册
         registerFirstAidChangeBroadCast();
@@ -107,7 +113,7 @@ public class FirstAidFragment extends Fragment {
      * 初始化数据
      * 用户信息
      */
-    private void initData(){
+    private void initData() {
         //获取当前用户信息
         Bundle userBundle = Objects.requireNonNull(getActivity()).getIntent().getBundleExtra("user");
         mUser = (User) Objects.requireNonNull(userBundle).get("user");
@@ -117,7 +123,12 @@ public class FirstAidFragment extends Fragment {
      * 初始化控件
      * 适配器
      */
-    private void initControls(){
+    private void initControls() {
+        //刷新按钮
+        mFabRefresh.setOnClickListener(view -> {
+            queryFirstAid();
+            mFabMenu.collapse();
+        });
 
         //初始化适配器
         mFirstAidList = new ArrayList<>();
@@ -127,11 +138,10 @@ public class FirstAidFragment extends Fragment {
         mRecyclerView.setAdapter(mFirstAidAdapter);
     }
 
-
     /**
      * 查询急救信息
      */
-    private void queryFirstAid(){
+    private void queryFirstAid() {
         mFirstAidList.clear();
         queryFirstAidFromServer();
     }
@@ -139,9 +149,9 @@ public class FirstAidFragment extends Fragment {
     /**
      * 从服务器查询急救信息
      */
-    private void queryFirstAidFromServer(){
+    private void queryFirstAidFromServer() {
         RequestBody formBody = new FormBody.Builder()
-                .add("username",mUser.getUserName())
+                .add("username", mUser.getUserName())
                 .build();
         String address = HOSPITAL + FIRST_AID_QUERY_USERNAME;
         HttpUtil.doPostRequest(address, formBody, new Callback() {
@@ -170,12 +180,12 @@ public class FirstAidFragment extends Fragment {
     }
 
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case CONNECTED_FAILED:
-                    XToast.warning(mContext,"连接失败,请检查网络!").show();
+                    XToast.warning(mContext, "连接失败,请检查网络!").show();
                     break;
                 case QUERY_SUCCESS:
                     mFirstAidAdapter.notifyDataSetChanged();

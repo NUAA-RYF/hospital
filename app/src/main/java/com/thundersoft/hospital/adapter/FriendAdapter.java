@@ -105,6 +105,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                             //向服务器发起请求
                             RequestBody formBody = new FormBody.Builder()
                                     .add("id", String.valueOf(friend.getId()))
+                                    .add("username",friend.getUsername())
                                     .add("close", "0")
                                     .build();
                             String address = HOSPITAL + FRIEND_UPDATE_CLOSE;
@@ -121,6 +122,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                             //向服务器发起请求
                             RequestBody formBody = new FormBody.Builder()
                                     .add("id", String.valueOf(friend.getId()))
+                                    .add("username",friend.getUsername())
                                     .add("close", "1")
                                     .build();
                             String address = HOSPITAL + FRIEND_UPDATE_CLOSE;
